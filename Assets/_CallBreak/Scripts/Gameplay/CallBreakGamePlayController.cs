@@ -50,6 +50,7 @@ namespace FGSOfflineCallBreak
 
         public Transform deckPosition;
         public Transform dealersHandPosition;
+        public Transform dealersFoldPosition;
 
         [Header("DEALER")]
         public bool isDealerTurn;
@@ -351,6 +352,7 @@ namespace FGSOfflineCallBreak
             SetAsLastSibling();
         }
 
+
         public void CheckWinnerFor()
         {
             switch (IsDealerDetermineWinner(selfUser.ReturnDealerCardScore(selfUser.myCard01), selfUser.ReturnDealerCardScore(dealersCards)))
@@ -413,10 +415,12 @@ namespace FGSOfflineCallBreak
                 }
                 CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
                 selfUser.ProfileAndNameDataSet();
-                NewRound();
+                selfUser.FoldYourCards();
+                Invoke(nameof(GoForNewRound), 4f);
             });
         }
 
+        public void GoForNewRound() => NewRound();
 
     }
 }

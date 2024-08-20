@@ -12,6 +12,8 @@ namespace FGSOfflineCallBreak
 
         public Image cardImage;
 
+        public LayoutElement layoutElement;
+
         public CallBreakUserController userController;
         public void DoAnimtion(Transform target, float timeDuration)
         {

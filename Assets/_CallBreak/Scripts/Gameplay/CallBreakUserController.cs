@@ -30,6 +30,14 @@ namespace FGSOfflineCallBreak
         public Transform cardParent01;
         public Transform cardParent02;
 
+        [Header("CARD PARENTS")]
+        public HorizontalLayoutGroup horizontalLayoutGroup01;
+        public HorizontalLayoutGroup horizontalLayoutGroup02;
+
+        [Header("CARD PARENTS")]
+        public Transform cardFoldPosition01;
+        public Transform cardFoldPosition02;
+
         [Header("MY CARD 01 && 02")]
         public List<CallBreakCardController> myCard01;
         public List<CallBreakCardController> myCard02;
@@ -128,6 +136,41 @@ namespace FGSOfflineCallBreak
                 UpdateTheScoreValue02(ReturnScore(myCard02));
             }
             CallBreakUIManager.Instance.gamePlayController.splitButton.interactable = CheckForSplit();
+        }
+
+        public void FoldYourCards()
+        {
+            horizontalLayoutGroup01.enabled = false;
+            horizontalLayoutGroup02.enabled = false;
+            foreach (var item in myCard01)
+            {
+                item.cardImage.sprite = CallBreakCardAnimation.instance.cardBackSprite;
+                item.transform.SetParent(transform);
+            }
+            foreach (var item in myCard02)
+            {
+                item.cardImage.sprite = CallBreakCardAnimation.instance.cardBackSprite;
+                item.transform.SetParent(transform);
+            }
+            Invoke(nameof(CollectCards), 1f);
+        }
+
+        public void CollectCards()
+        {
+            foreach (var item in myCard01)
+                item.transform.DOMove(myCard01[0].transform.position, 0.5f).SetEase(Ease.Linear);
+            foreach (var item in myCard02)
+                item.transform.DOMove(myCard02[0].transform.position, 0.5f).SetEase(Ease.Linear);
+
+            Invoke(nameof(MoveCardsToWasteCard), 2f);
+        }
+
+        public void MoveCardsToWasteCard()
+        {
+            foreach (var item in myCard01)
+                item.transform.DOMove(CallBreakUIManager.Instance.gamePlayController.dealersFoldPosition.transform.position, 0.5f).SetEase(Ease.Linear);
+            foreach (var item in myCard02)
+                item.transform.DOMove(CallBreakUIManager.Instance.gamePlayController.dealersFoldPosition.transform.position, 0.5f).SetEase(Ease.Linear);
         }
 
         public void UserTurnForHitAndStand()

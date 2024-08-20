@@ -92,14 +92,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardDetail:
-    value: 0
+    cardNumber: 0
     cardValue: 0
     cardName: 
     cardType: 0
     cardSprite: {fileID: 0}
   cardImage: {fileID: 4796415412306115063}
-  scoreHud: {fileID: 0}
-  scoreHudText: {fileID: 0}
+  layoutElement: {fileID: 3669484313794023009}
+  userController: {fileID: 0}
 --- !u!114 &3669484313794023009
 MonoBehaviour:
   m_ObjectHideFlags: 0
