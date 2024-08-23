@@ -31,23 +31,36 @@ namespace FGSOfflineCallBreak
 
             timerObject.SetActive(true);
 
-            CallBreakSoundManager.PlaySoundEvent(SoundEffects.YourTurn);
-            CallBreakSoundManager.PlayVibrationEvent();
-
-            userFillImageAnimation = userFillImage.DOFillAmount(1, userTimerDuration).SetEase(Ease.Linear).OnComplete(() =>
+            if (!CallBreakCardAnimation.instance.gamePlayController.allPlayer[CallBreakGameManager.currentPlayerIndex].isSelfPlayer)
             {
-                CallBreakUIManager.Instance.toolTipsController.OpenToolTips("TimeUp", "Your time is out! Minimun Chips are automaotically bet.", "");
-                //CallBreakCardAnimation.instance.gamePlayController.allPlayer[CallBreakGameManager.instance.currentPlayerIndex].UserTurnStarted();
-            });
+                Invoke(nameof(ThrowCardOfBot), UnityEngine.Random.Range(0, 1));
+            }
+            else
+            {
+                CallBreakCardAnimation.instance.SelfPlayerTempObjActive(false);
+                CallBreakSoundManager.PlaySoundEvent(SoundEffects.YourTurn);
+                CallBreakSoundManager.PlayVibrationEvent();
+                CallBreakCardAnimation.instance.CardRaycast(true);
+                userFillImageAnimation = userFillImage.DOFillAmount(1, userTimerDuration).SetEase(Ease.Linear).OnComplete(() =>
+                {
+                     CallBreakCardAnimation.instance.gamePlayController.allPlayer[CallBreakGameManager.currentPlayerIndex].UserTurnStarted();
+                });
+            }
 
             dotRotationAnimation = dotObj.transform.DORotate(new Vector3(0, 0, -360), userTimerDuration, RotateMode.FastBeyond360).SetEase(Ease.Linear);
             userCounterAnimation = DOTween.To(() => userTimerDuration, x => userTimerText.text = Mathf.Round(x).ToString(), 0, userTimerDuration).SetEase(Ease.Linear).OnUpdate(() =>
             {
                 if (userTimerText.text == "1")
                 {
-
+                    CallBreakCardAnimation.instance.CardRaycast(false);
                 }
             });
+        }
+
+        public void ThrowCardOfBot()
+        {
+            Debug.Log($"ThrowCardOfBot ");
+            CallBreakCardAnimation.instance.gamePlayController.allPlayer[CallBreakGameManager.currentPlayerIndex].UserTurnStarted();
         }
 
         public void TimerObjectDeActivate()

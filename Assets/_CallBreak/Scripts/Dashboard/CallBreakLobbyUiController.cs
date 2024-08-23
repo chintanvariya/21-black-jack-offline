@@ -6,38 +6,40 @@ namespace FGSOfflineCallBreak
 
     public class CallBreakLobbyUiController : MonoBehaviour
     {
-        [Header("BACK GROUND")]
-        public Image backGround;
+        [Header("BACKGROUND IMAGE")]
+        public Image bg;
 
         [Header("TEXT")]
-        public TMPro.TextMeshProUGUI lobbyTypeName;
-        public TMPro.TextMeshProUGUI minAmountText;
-        public TMPro.TextMeshProUGUI maxAmountText;
-        public TMPro.TextMeshProUGUI keysAmountText;
-
-        [Header("BUTTON TEXT")]
-        public TMPro.TextMeshProUGUI buttonText;
-
+        public TMPro.TextMeshProUGUI lobbyType;
+        public TMPro.TextMeshProUGUI roundText;
+        public TMPro.TextMeshProUGUI playButtonText;
+        public TMPro.TextMeshProUGUI winAmountText;
+        [Header("IMAGE")]
+        public Image practicesAndCoin;
         [Header("LOBBY AMOUNT")]
+        public int lobbyAmount;
         public string keysAmount;
-
-        public int minimumTableAmount;
-        public int maximumTableAmount;
-
-        [Header("Dashboard Controller")]
+        [Header("DashboardHandler")]
         public CallBreakDashboardController dashboardController;
 
-        public void UpdateLobbyText(Sprite bg, string typeName, string minAmount, string maxAmount, string keys)
+        public void UpdateLobbyText(Sprite _practicesAndCoin, int _lobbyAmount, string keys, string round, string playButton, string winAmount)
         {
-            backGround.sprite = bg;
-            lobbyTypeName.text = typeName;
-            minAmountText.text = minAmount;
-            maxAmountText.text = maxAmount;
-            keysAmountText.text = keys;
-            buttonText.text = $"{ minAmount } / {maxAmount}";
+            if (keys == "Practice")
+                keysAmount = "0";
+            else
+                keysAmount = keys;
+
+            lobbyAmount = _lobbyAmount;      //100
+            lobbyType.text = keys;           //Practice || +10
+            roundText.text = round;          //Standard
+            playButtonText.text = playButton;//Play 10
+            winAmountText.text = winAmount;  //40
+            practicesAndCoin.sprite = _practicesAndCoin;
         }
 
+        public void UpdateRoundText(string mode) => roundText.text = mode;
 
-        public void OnButtonClicked() => dashboardController.OnButtonPlayNow(this);
+        public void OnOnClikedPlay() => dashboardController.OnButtonPlayNow(this);
+
     }
 }

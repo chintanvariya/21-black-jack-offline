@@ -2,120 +2,54 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using static UnityEngine.ParticleSystem;
 
 namespace FGSOfflineCallBreak
 {
     public class CallBreakGamePlayController : MonoBehaviour
     {
-        [Header("SELF USER")]
-        public CallBreakUserController selfUser;
-        [Header("GAME LOBBY AMOUNT")]
+        public List<CallBreakUserController> allPlayer = new List<CallBreakUserController>();
+
+        public List<BotDetails> botDetails = new List<BotDetails>();
+
         public TMPro.TextMeshProUGUI gamePlayLobbyAmount;
         public TMPro.TextMeshProUGUI gamePlayRoundText;
 
-        [Header("Buttons Transform")]
-        public Button splitButton;
-        public RectTransform dealButtonsParent;
-        public RectTransform chipsButtonsParent;
-        public RectTransform gamePlayButtonsParent;
-
-        [Header("All Coins Value")]
-        public List<int> allCoinsValue;
-        [Header("All Coins Value Text")]
-        public List<TMPro.TextMeshProUGUI> allCoinValueText;
-
-        [Header("Current Player Turn Index")]
-        public int currentPlayerTurn;
-
-        [Header("Current Deal Amount")]
-        public int currentDealAmount;
-        public int reDealCurrentDealAmount;
-
-        [Header("Coin Animation Object")]
-        public GameObject coinAnimationObject;
-        public TMPro.TextMeshProUGUI coinAnimationObjectText;
-
-        [Header("Animation Variable")]
-        public Transform startPosition, target;
-        [Range(-500, 500)]
-        public float jumpMultiplayer;
-
-        [Range(0, 10)]
-        public int jumpCount;
-
-        [Range(0, 10)]
-        public float jumpTime;
-
-        public Transform deckPosition;
-        public Transform dealersHandPosition;
-        public Transform dealersFoldPosition;
-
-        [Header("DEALER")]
-        public bool isDealerTurn;
-
-        public Transform dealerCardParent;
-        public List<CallBreakCardController> dealersCards;
-
-        [Header("DEALER SCORE HUD 01")]
-        public GameObject scoreHud01;
-        public TMPro.TextMeshProUGUI scoreHud01Text;
-
         public void OpenScreen()
         {
-            CallBreakCardAnimation.instance.StopAllCoroutinesOnGamePlay();
-            CallBreakCardAnimation.instance.SetAndStartGamePlay();
-            CallBreakGameManager.isInGamePlay = true;
-            //Card Deal Animation
-
-            int minValue = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount;
-            int maxValue = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount;
-
-            int stepSize = (maxValue - minValue) / 4;
-
-            allCoinsValue.Clear();
-            // Calculate the intermediate values
-            allCoinsValue.Add(minValue);
-            allCoinsValue.Add(RoundToNearestHundred(minValue + stepSize));
-            allCoinsValue.Add(RoundToNearestHundred(minValue + 2 * stepSize));
-            allCoinsValue.Add(RoundToNearestHundred(minValue + 3 * stepSize));
-            allCoinsValue.Add(maxValue);
-
-            for (int i = 0; i < allCoinValueText.Count; i++)
+            botDetails = new List<BotDetails>();
+            for (int i = 0; i < 3; i++)
             {
-                allCoinValueText[i].text = CallBreakUtilities.AbbreviateNumber(allCoinsValue[i]);
-                Debug.Log($"<color><b>indexOfValue => <color=green><b>{RoundToNearestHundred(allCoinsValue[i])} </b></color> ||</b></color>");
+                botDetails.Add(CallBreakGameManager.instance.generateTheBots.allBotDetails[Random.Range(0, CallBreakGameManager.instance.generateTheBots.allBotDetails.Count)]);
             }
+            for (int i = 0; i < allPlayer.Count; i++)
+            {
+                if (i != 0)
+                    allPlayer[i].botDetails = botDetails[i - 1];
 
-            selfUser.ProfileAndNameDataSet();
-            NewRound();
+                allPlayer[i].ProfileAndNameDataSet();
+                allPlayer[i].ResetUserTimer();
+            }
+            string lobbyAmount = $"{CallBreakGameManager.instance.lobbyAmount}";
+            if (CallBreakGameManager.instance.lobbyAmount == 0)
+                lobbyAmount = "Free";
+
+            gamePlayLobbyAmount.text = lobbyAmount;
+
+            CallBreakGameManager.instance.currentRound = 0;
+
+            UpdateTheRoundText();
+
+            CallBreakCardAnimation.instance.StartGamePlay(1f);
+
+            CallBreakGameManager.isInGamePlay = true;
+            FirebaseController.instance.FirelogEvent("isInGamePlay", "GamePlayController", "CallBreak");
+
             gameObject.SetActive(true);
+            //Card Deal Animation
         }
 
-        public void NewRound()
-        {
-            currentPlayerTurn = 0;
-            reDealCurrentDealAmount = currentDealAmount;
-            currentDealAmount = 0;
-            selfUser.turnTimer.SelfUserTimer();
-            dealButtonsParent.gameObject.SetActive(true);
-            chipsButtonsParent.gameObject.SetActive(true);
-            gamePlayButtonsParent.gameObject.SetActive(false);
-            selfUser.ResetPlayerData();
-            ResetDealerData();
-        }
-
-
-        int RoundToNearestHundred(int value)
-        {
-            int remainder = value % 100;
-            if (remainder < 50)
-                value -= remainder;
-            else
-                value += (100 - remainder);
-            return value;
-        }
+        public void UpdateTheRoundText() => gamePlayRoundText.text = CallBreakGameManager.instance.currentRound + "/" + CallBreakGameManager.instance.totalRound;
 
         public void OnButtonClicked(string buttonName)
         {
@@ -124,131 +58,9 @@ namespace FGSOfflineCallBreak
                 case "GamePlaydMenu":
                     CallBreakUIManager.Instance.menuController.OpenScreen("GamePlaydMenu");
                     break;
-                case "Min":
-                    OnButtonClickedBet(0);
-                    break;
-                case "Max":
-                    OnButtonClickedBet(allCoinsValue.Count - 1);
-                    break;
-                case "Deal":
-                    //START THE CARD DEALING
-                    if (currentDealAmount == 0)
-                    {
-                        CallBreakUIManager.Instance.toolTipsController.OpenToolTips("Confirm", "put some chips", "");
-                    }
-                    else
-                    {
-                        selfUser.turnTimer.TimerObjectDeActivate();
-                        dealButtonsParent.gameObject.SetActive(false);
-                        chipsButtonsParent.gameObject.SetActive(false);
-                        gamePlayButtonsParent.gameObject.SetActive(true);
-
-                        StartCoroutine(CardDealAnimation());
-                    }
-                    break;
-                case "ReDeal":
-                    if (reDealCurrentDealAmount > 0 && CallBreakGameManager.instance.selfUserDetails.userChips > reDealCurrentDealAmount)
-                    {
-                        currentDealAmount += reDealCurrentDealAmount;
-                        CallBreakGameManager.instance.selfUserDetails.userChips -= currentDealAmount;
-                        CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
-                        selfUser.ProfileAndNameDataSet();
-
-                        selfUser.totalBetAmount = currentDealAmount;
-                        selfUser.userTotalBetAmount.SetActive(true);
-                        selfUser.userTotalBetAmountText.text = CallBreakUtilities.AbbreviateNumber(currentDealAmount);
-                    }
-                    else
-                    {
-
-                    }
-                    break;
-                case "Clear":
-                    CallBreakGameManager.instance.selfUserDetails.userChips += currentDealAmount;
-                    CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
-                    selfUser.ProfileAndNameDataSet();
-                    currentDealAmount = 0;
-                    selfUser.userTotalBetAmount.SetActive(false);
-                    break;
-                case "DoubleBet":
-                    if (currentDealAmount > 0)
-                    {
-                        currentDealAmount = currentDealAmount * 2;
-                        coinAnimationObjectText.text = CallBreakUtilities.AbbreviateNumber(currentDealAmount);
-                    }
-                    break;
-                case "Double":
-
-                    break;
-                case "Split":
-                    selfUser.ClickedOnSplit();
-                    break;
-                case "Stand":
-                    //Check for winner
-                    if (selfUser.isSplit)
-                    {
-                        selfUser.currentMyCardListIndex++;
-                        selfUser.UserTurnForHitAndStand();
-                        if (selfUser.currentMyCardListIndex == 2)
-                        {
-                            StartCoroutine(nameof(ShowTheDealerCards));
-                        }
-                    }
-                    else
-                    {
-                        StartCoroutine(nameof(ShowTheDealerCards));
-                    }
-                    break;
-                case "Hit":
-                    selfUser.UpdateMyCards(CallBreakCardAnimation.instance.RetrunCardObject(), deckPosition, 0.5f);
-                    break;
                 default:
                     break;
             }
-        }
-
-        string IsDealerDetermineWinner(int total1, int total2)
-        {
-            if (total1 == 21 || (total1 < 21 && total2 > 21))
-            {
-                Debug.Log($"<color><b>WIN DEALER => <color=green><b> {selfUser.ReturnDealerCardScore(selfUser.myCard01)}</b></color></b></color>");
-                Debug.Log("Player wins!");
-                return "Win";
-            }
-            else if (total2 == 21 || (total2 < 21 && total1 > 21))
-            {
-                Debug.Log($"<color><b>WIN DEALER => <color=green><b> {selfUser.ReturnDealerCardScore(selfUser.myCard01)}</b></color></b></color>");
-                Debug.Log("DEALER wins!");
-                return "Lose";
-            }
-            else if (Mathf.Abs(total1 - 21) < Mathf.Abs(total2 - 21))
-            {
-                Debug.Log("Player wins!");
-                return "Win";
-            }
-            else if (Mathf.Abs(total2 - 21) < Mathf.Abs(total1 - 21))
-            {
-                Debug.Log("DEALER wins!");
-                return "Lose";
-            }
-            else
-            {
-                //PUSH
-                Debug.Log("It's a tie!");
-                return "Push";
-            }
-        }
-
-        public void UpdateTheUserWallet()
-        {
-            CallBreakUIManager.Instance.rewardCoinAnimation.CollectCoinAnimation("WinnerLoser");
-        }
-
-        public void AutoBetOnTimerOut()
-        {
-            selfUser.turnTimer.TimerObjectDeActivate();
-            OnButtonClicked("Min");
-            OnButtonClicked("Deal");
         }
 
         public void CloseScreen()
@@ -257,170 +69,121 @@ namespace FGSOfflineCallBreak
             CallBreakCardAnimation.instance.StopAllCoroutinesOnGamePlay();
         }
 
-        public void OnButtonClickedBet(int indexOfValue)
-        {
-            Debug.Log($"<color><b>indexOfValue => <color=green><b>{indexOfValue} </b></color> || BET VALUE => {allCoinsValue[indexOfValue]}</b></color>");
+        //internal IEnumerator NextUserTurn()
+        //{
+        //    currentPlayerIndex = (currentPlayerIndex + 1) % 4;
 
-            if (CallBreakGameManager.instance.selfUserDetails.userChips > allCoinsValue[indexOfValue])
-            {
-                startPosition = allCoinValueText[indexOfValue].transform.parent;
-                currentDealAmount += allCoinsValue[indexOfValue];
+        //    Debug.Log(" Next PlayerTurn ====> " + currentPlayerIndex);
 
-                CallBreakGameManager.instance.selfUserDetails.userChips -= currentDealAmount;
-                CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
-                selfUser.ProfileAndNameDataSet();
+        //    if (gamePlayController.allPlayer.TrueForAll(i => i.isMyTurnComplete == true))
+        //    {
+        //        gamePlayController.allPlayer[0].ActiveAllSelfPlayerCard(false);
 
-                coinAnimationObjectText.text = CallBreakUtilities.AbbreviateNumber(allCoinsValue[indexOfValue]);
+        //        List<CallBreakCardController> spadeCards = new();
+        //        List<CallBreakCardController> otherTypeCards = new();
 
-                coinAnimationObject.transform.position = startPosition.position;
-                coinAnimationObject.SetActive(true);
+        //        for (int i = 0; i < allTableCards.Count; i++)
+        //        {
+        //            if (allTableCards[i].cardDetail.cardType == CardType.Spade)
+        //            {
+        //                spadeCards.Add(allTableCards[i]);
+        //                Debug.Log(" Spade Add " + allTableCards[i].name);
+        //            }
+        //        }
 
-                coinAnimationObject.transform.DOJump(target.position, jumpMultiplayer, jumpCount, jumpTime).SetEase(Ease.Linear).OnComplete(() =>
-                {
-                    coinAnimationObject.SetActive(false);
-                    selfUser.totalBetAmount = currentDealAmount;
-                    selfUser.userTotalBetAmount.SetActive(true);
-                    selfUser.userTotalBetAmountText.text = CallBreakUtilities.AbbreviateNumber(currentDealAmount);
-                });
-            }
-            else
-            {
-                CallBreakUIManager.Instance.toolTipsController.OpenToolTips("Chips", "not enough chips ! buy some chips from store.", "");
-            }
-        }
+        //        allTableCards.Sort((a, b) => b.cardDetail.value.CompareTo(a.cardDetail.value));
+        //        spadeCards.Sort((a, b) => b.cardDetail.value.CompareTo(a.cardDetail.value));
 
+        //        for (int i = 0; i < allTableCards.Count; i++)
+        //        {
+        //            Debug.LogWarning(allTableCards[i].cardDetail.cardType + " ===== " + currentCard.cardDetail.cardType);
 
-        public IEnumerator CardDealAnimation()
-        {
-            for (int j = 0; j < 2; j++)
-            {
-                bool isSingleCardDeal = false;
-                for (int i = 0; i < 2; i++)
-                {
-                    yield return new WaitForSeconds(0.5f);
+        //            if (allTableCards[i].cardDetail.cardType != currentCard.cardDetail.cardType)
+        //            {
+        //                otherTypeCards.Add(allTableCards[i]);
+        //                Debug.Log(allTableCards[i].name);
+        //            }
+        //        }
 
-                    if (!isSingleCardDeal)
-                    {
-                        isSingleCardDeal = true;
-                        selfUser.UpdateMyCards(CallBreakCardAnimation.instance.RetrunCardObject(), deckPosition, 0.5f);
-                    }
-                    else
-                        UpdateMyCards(CallBreakCardAnimation.instance.RetrunCardObject(), deckPosition, 0.5f);
-                }
-            }
-            selfUser.UserTurnForHitAndStand();
-        }
+        //        for (int i = 0; i < otherTypeCards.Count; i++)
+        //        {
+        //            if (allTableCards.Contains(otherTypeCards[i])) allTableCards.Remove(otherTypeCards[i]);
+        //        }
+
+        //        CallBreakCardController winCard = (spadeCards.Count > 0) ? spadeCards[0] : allTableCards[0];
+        //        yield return new WaitForSeconds(0.2f);
+
+        //        Debug.Log(" WINCARD == " + winCard.name);
+        //        Tweener scaleAnimation = winCard.transform.DOScale(new Vector3(WinCardScale, WinCardScale, WinCardScale), 0.2f).SetEase(Ease.Linear).SetAutoKill(false);
+        //        Transform playerData = winCard.cardThrowParent;
 
 
+        //        yield return new WaitForSeconds(0.3f);
 
-        public void ResetDealerData()
-        {
-            foreach (var item in dealersCards)
-                Destroy(item.gameObject);
+        //        scaleAnimation.PlayBackwards();
 
-            dealersCards.Clear();
-            UpdateTheScoreValue01("");
-            ShowAndHideHud01(false);
-        }
+        //        yield return new WaitForSeconds(0.5f);
 
-        public void UpdateTheScoreValue01(string value) => scoreHud01Text.text = value;
-        public void ShowAndHideHud01(bool isActive) => scoreHud01.SetActive(isActive);
-        public void SetAsLastSibling() => scoreHud01.transform.SetAsLastSibling();
-        public IEnumerator ShowTheDealerCards()
-        {
-            if (selfUser.toolTipsText.text == "BUSTED")
-            {
-                MoveChips(target, dealerCardParent.transform, true);
-            }
-            else
-            {
-                foreach (var item in dealersCards)
-                    item.cardImage.sprite = item.cardDetail.cardSprite;
+        //        for (int i = 0; i < otherTypeCards.Count; i++)
+        //        {
+        //            allTableCards.Add(otherTypeCards[i]);
+        //        }
 
-                UpdateTheScoreValue01($"{selfUser.ReturnDealerCardScore(dealersCards)}");
-                yield return new WaitForSeconds(1f);
-                if (selfUser.ReturnDealerCardScore(dealersCards) >= 17)
-                {
-                    CheckWinnerFor();
-                }
-                else if (selfUser.ReturnDealerCardScore(dealersCards) < 17)
-                {
-                    UpdateMyCards(CallBreakCardAnimation.instance.RetrunCardObject(), deckPosition, 0.5f);
-                    StartCoroutine(nameof(ShowTheDealerCards));
-                }
-            }
-            SetAsLastSibling();
-        }
+        //        foreach (var item in particles)
+        //        {
+        //            item.SetActive(true);
+        //            item.transform.localPosition = Vector3.zero;
+        //        }
+
+        //        foreach (var item in allTableCards)
+        //        {
+        //            item.transform.DOScale(Vector3.zero, .3f).SetEase(Ease.Linear);
+        //            item.transform.DOMove(winCard.cardThrowParent.position, .3f).SetEase(Ease.Linear);
+        //        }
+
+        //        foreach (var item in particles)
+        //        {
+        //            item.transform.DOMove(winCard.cardThrowParent.position, .3f).SetEase(Ease.Linear);
+        //        }
 
 
-        public void CheckWinnerFor()
-        {
-            switch (IsDealerDetermineWinner(selfUser.ReturnDealerCardScore(selfUser.myCard01), selfUser.ReturnDealerCardScore(dealersCards)))
-            {
-                case "Win":
-                    MoveChips(target, selfUser.userChipsText.transform, false);
-                    break;
-                case "Lose":
-                    MoveChips(target, dealerCardParent.transform, true);
-                    break;
-                case "Push":
-                    MoveChips(target, selfUser.userChipsText.transform, false);
-                    selfUser.UpdateUserToolTip("PUSH");
-                    break;
-                default:
-                    break;
-            }
-        }
+        //        yield return new WaitForSeconds(0.5f);
 
+        //        foreach (var item in particles)
+        //        {
+        //            item.SetActive(false);
+        //        }
 
-        public void UpdateMyCards(CallBreakCardController cardController, Transform startPosition, float jumpTime)
-        {
-            cardController.transform.position = startPosition.position;
-            if (dealersCards.Count == 1)
-            {
-                cardController.cardImage.sprite = CallBreakCardAnimation.instance.cardBackSprite;
-                UpdateTheScoreValue01($"{dealersCards[0].cardDetail.cardValue}");
-                if (dealersCards[0].cardDetail.cardNumber == 14)
-                {
-                    Debug.Log("<color><b> Go for insurance </b></color>");
-                }
-            }
-            ShowAndHideHud01(true);
-            dealersCards.Add(cardController);
-            Debug.LogError("=======> DEALER CARDS");
-            scoreHud01.transform.SetAsLastSibling();
-            cardController.DoAnimtion(dealerCardParent, jumpTime);
-            SetAsLastSibling();
-        }
+        //        winCard.myPlayerData.currentBidScore++;
+        //        winCard.myPlayerData.SetMyBid();
+        //        TurnDataReset();
+        //        currentPlayerIndex = gamePlayController.allPlayer.IndexOf(winCard.myPlayerData);
 
-        public void MoveChips(Transform start, Transform targetToWinner, bool isDealerWinner)
-        {
-            coinAnimationObjectText.text = CallBreakUtilities.AbbreviateNumber(currentDealAmount);
-            coinAnimationObject.transform.position = start.position;
+        //        WinnerTurn();
 
-            selfUser.userTotalBetAmount.SetActive(false);
-            coinAnimationObject.SetActive(true);
+        //        if (gamePlayController.allPlayer.TrueForAll(i => i.myCards.Count == 0))
+        //        {
+        //            ScoreBoardDataEvent();
+        //            Invoke(nameof(RestartGame), 1.5f);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        //float delayTime = UnityEngine.Random.Range(0.1f, 0.4f);
+        //        if (currentPlayerIndex == 0) delayTime = 0;
+        //        else delayTime = 0.3f;
+        //        yield return new WaitForSeconds(delayTime);
 
-            coinAnimationObject.transform.DOMove(targetToWinner.position, jumpTime).SetEase(Ease.Linear).OnComplete(() =>
-            {
-                coinAnimationObject.SetActive(false);
-                if (isDealerWinner)
-                {
-                    //CallBreakGameManager.instance.selfUserDetails.userChips -= currentDealAmount;
-                }
-                else
-                {
-                    CallBreakGameManager.instance.selfUserDetails.userChips += currentDealAmount * 2;
-                    CallBreakGameManager.instance.selfUserDetails.userKeys += CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount / 8;
-                }
-                CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
-                selfUser.ProfileAndNameDataSet();
-                selfUser.FoldYourCards();
-                Invoke(nameof(GoForNewRound), 4f);
-            });
-        }
-
-        public void GoForNewRound() => NewRound();
-
+        //        if (currentPlayerIndex == 0)
+        //        {
+        //            gamePlayController.allPlayer[0].HighLightCard();
+        //            ThrowSelfPlayerCardAuto();
+        //        }
+        //        else
+        //        {
+        //            gamePlayController.allPlayer[currentPlayerIndex].turnTimer.SelfUserTimer();//ThrowCard()
+        //        }
+        //    }
+        //}
     }
 }

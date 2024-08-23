@@ -23,9 +23,6 @@ namespace FGSOfflineCallBreak
             secondText.gameObject.SetActive(false);
             switch (toolTipsName)
             {
-                case "TimeUp":
-                case "Chips":
-                case "Confirm":
                 case "AdsIsNotReady":
                     firstText.gameObject.SetActive(true);
                     firstText.text = message01;
@@ -50,7 +47,7 @@ namespace FGSOfflineCallBreak
             CancelInvoke(nameof(CloseAnimation));
             Invoke(nameof(CloseAnimation), 1f);
         }
-        public void CloseAnimation()
+        void CloseAnimation()
         {
             //rootTransfrom.DOMove(startPosition.position, 0.2f).SetEase(Ease.Linear).OnComplete(() =>
             rootTransfrom.DOScale(Vector3.zero, 0.2f).SetEase(Ease.Linear).OnComplete(() =>

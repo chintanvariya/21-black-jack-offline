@@ -12,14 +12,6 @@ namespace FGSOfflineCallBreak
             return int.Parse(cardTypeValue);
         }
 
-        public static int ReturnValue(string cardTypeValue)
-        {
-            int value = int.Parse(cardTypeValue);
-            if (value >= 10)
-                value = 10;
-            return value;
-        }
-
         public static CardType ReturnMyCardType(string cardTypeName)
         {
             if (cardTypeName == "H")
