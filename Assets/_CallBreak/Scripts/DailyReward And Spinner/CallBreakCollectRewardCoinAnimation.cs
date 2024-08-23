@@ -91,12 +91,12 @@ namespace FGSOfflineCallBreak
             float rewardOfCoin = 0;
             float rewardOfKeys = 0;
             counterOFAnimationDone++;
+
             if (counterOFAnimationDone == allObjects.Count)
             {
                 for (int i = 0; i < allObjects.Count; i++)
-                {
                     Destroy(allObjects[i].gameObject);
-                }
+
                 switch (doAnimationOfThisScreen)
                 {
                     case "Spinner":
@@ -109,7 +109,7 @@ namespace FGSOfflineCallBreak
                         CallBreakUIManager.Instance.collectRewardController.OnButtonClicked("Close");
                         break;
                     case "WinnerLoser":
-                        rewardOfCoin = CallBreakUIManager.Instance.winnerLoserController.rewardedCoins;
+                        rewardOfCoin = CallBreakUIManager.Instance.gamePlayController.selfUser.totalBetAmount;
                         CallBreakUIManager.Instance.winnerLoserController.OnButtonClicked("Close");
                         break;
                     case "100Coins":

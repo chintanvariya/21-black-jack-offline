@@ -43,7 +43,6 @@ namespace FGSOfflineCallBreak
                 allButtonImages[i].sprite = normalButton;
             allButtonImages[countOfBid - 1].sprite = selectedButton;
 
-            CallBreakUIManager.Instance.gamePlayController.allPlayer[0].totalBid = countOfBid;
             confirmBidButton.interactable = true;
         }
 
@@ -53,11 +52,6 @@ namespace FGSOfflineCallBreak
         {
             CallBreakSoundManager.PlaySoundEvent(SoundEffects.Click);
 
-            CallBreakUIManager.Instance.gamePlayController.allPlayer[0].SetMyBid();
-
-            CallBreakCardAnimation.instance.gamePlayController.allPlayer[0].BidToolTipAnimation();
-
-            CallBreakCardAnimation.instance.OnBidToolTipClose();
 
             CloseScreen();
         }

@@ -4,7 +4,6 @@ using UnityEngine;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Ump.Api;
 using GoogleMobileAds.Sample;
-using FGSOfflineCallBreak;
 
 namespace GoogleMobileAds.Samples
 {
@@ -31,11 +30,7 @@ namespace GoogleMobileAds.Samples
             "702815ACFC14FF222DA1DC767672A573"
 #endif
         };
-        private void Start()
-        {
-            Debug.Log("============");
-            InitializeGoogleMobile();
-        }
+
         // The Google Mobile Ads Unity plugin needs to be run only once.
         private static bool? _isInitialized;
 
@@ -47,8 +42,6 @@ namespace GoogleMobileAds.Samples
         /// <summary>
         /// Demonstrates how to configure Google Mobile Ads Unity plugin.
         /// </summary>
-       
-
         public void InitializeGoogleMobile()
         {
             // On Android, Unity is paused when displaying interstitial or rewarded video.
@@ -139,7 +132,6 @@ namespace GoogleMobileAds.Samples
                     }
                 }
 
-                FirebaseController.instance.FirelogEvent("GoogleMobileAds_Successful_Initialized", "FireBaseInitialize", "Firebase_Successful_Initialized");
                 Debug.Log("Google Mobile Ads initialization complete.");
                 _isInitialized = true;
 
