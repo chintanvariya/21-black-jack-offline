@@ -8,85 +8,55 @@ namespace FGSOfflineCallBreak
 {
     public class CallBreakUserController : MonoBehaviour
     {
-        [Header("BOT DETAILS")]
         public BotDetails botDetails;
 
-        [Header("STATIC SEAT INDEX")]
         public int staticSeatIndex;
 
-        [Header("USER DETAILS REF")]
+        [Space(10)]
+        public Transform myCardPos, myThrowCardPos;
+
         public Image profilePicture;
+
         public TextMeshProUGUI userNameText;
+        public TextMeshProUGUI bidText;
         public TextMeshProUGUI userChipsText;
 
-        [Space(10)]
-        [Header("TOOL TIPS")]
         //public GameObject crownObj;
-        public TextMeshProUGUI toolTipsText;
         public GameObject bidObjectToolTip;
         public GameObject dealerIcon;
 
-        [Header("CARD PARENTS")]
-        public Transform cardParent01;
-        public Transform cardParent02;
+        [Space(10)]
+        public List<CallBreakCardController> myCards = new List<CallBreakCardController>();
 
-        [Header("CARD PARENTS")]
-        public HorizontalLayoutGroup horizontalLayoutGroup01;
-        public HorizontalLayoutGroup horizontalLayoutGroup02;
+        public List<CallBreakCardController> spadeCards = new List<CallBreakCardController>();
+        public List<CallBreakCardController> heartCards = new List<CallBreakCardController>();
+        public List<CallBreakCardController> clubCards = new List<CallBreakCardController>();
+        public List<CallBreakCardController> diamondCards = new List<CallBreakCardController>();
 
-        [Header("CARD PARENTS")]
-        public Transform cardFoldPosition01;
-        public Transform cardFoldPosition02;
+        public List<float> roundScore = new List<float>();
 
-        [Header("MY CARD 01 && 02")]
-        public List<CallBreakCardController> myCard01;
-        public List<CallBreakCardController> myCard02;
-
-        [Header("IS SELF PLAYER")]
+        internal bool isMyTurnComplete;
+        internal int totalBid, currentBidScore;
+        internal float finalScore;
+        public int totalScore;
         public bool isSelfPlayer;
 
-        [Header("IS DEALER")]
-        public bool isDealer;
-
-        [Header("USER TOTAL BET AMOUNT AND TEXT")]
-        public GameObject userTotalBetAmount;
-        public int totalBetAmount;
-        public TMPro.TextMeshProUGUI userTotalBetAmountText;
-
-        [Header("TIMER")]
         public CallBreakUserTurnTimer turnTimer;
 
-        [Header("SCORE HUD 01")]
-        public GameObject scoreHud01;
-        public TMPro.TextMeshProUGUI scoreHud01Text;
-        public void UpdateTheScoreValue01(string value) => scoreHud01Text.text = value;
-        public void ShowAndHideHud01(bool isActive)
+        public Transform emojiTransform;
+        private void OnEnable()
         {
-            scoreHud01.SetActive(isActive);
-            scoreHud01.transform.SetAsLastSibling();
+            //CallBreakGameManager.ResetPlayerDataEvent += ResetPlayerData;
+            CallBreakGameManager.ScoreBoardDataEvent += ScoreBoardUpdate;
         }
 
-        [Header("SCORE HUD 02")]
-        public GameObject scoreHud02;
-        public TMPro.TextMeshProUGUI scoreHud02Text;
-        public void UpdateTheScoreValue02(string value) => scoreHud02Text.text = value;
-        public void ShowAndHideHud02(bool isActive)
+        private void OnDisable()
         {
-            scoreHud02.SetActive(isActive);
-            scoreHud02.transform.SetAsLastSibling();
+            //CallBreakGameManager.ResetPlayerDataEvent -= ResetPlayerData;
+            CallBreakGameManager.ScoreBoardDataEvent -= ScoreBoardUpdate;
         }
 
-        [Header("SPLIT FLAG")]
-        public bool isSplit;
-        public int currentSplitCardIndex;
-
-        public void ResetUserTimer() => turnTimer.TimerObjectDeActivate();
-
-        public void UserTurnStarted() => turnTimer.SelfUserTimer();
-
-        internal void UpdateUserToolTip(string status) => toolTipsText.text = status;
-
-        public int currentMyCardListIndex;
+        internal void SetMyBid() => bidText.text = currentBidScore + "/" + totalBid.ToString();
 
         internal void ProfileAndNameDataSet()
         {
@@ -102,224 +72,206 @@ namespace FGSOfflineCallBreak
                 profilePicture.sprite = CallBreakGameManager.instance.generateTheBots.allBotSprite[botDetails.userAvatarIndex];
                 userNameText.text = botDetails.userName;
             }
-            UpdateUserToolTip("");
+            SetMyBid();
         }
 
-        public void UpdateMyCards(CallBreakCardController cardController, Transform startPosition, float jumpTime)
+        public void UserTurnStarted()
         {
-            cardController.transform.position = startPosition.position;
-            cardController.userController = this;
-
-            if (currentMyCardListIndex == 0)
+            turnTimer.TimerObjectDeActivate();
+            if (CallBreakGameManager.instance.currentCard.cardDetail.cardType == CardType.Heart && heartCards.Count != 0)
             {
-                cardController.DoAnimtion(cardParent01, jumpTime);
-                myCard01.Add(cardController);
+                heartCards[0].ThrowCardAnimation(myThrowCardPos, staticSeatIndex);
             }
-            else if (currentMyCardListIndex == 1)
+            else if (CallBreakGameManager.instance.currentCard.cardDetail.cardType == CardType.Club && clubCards.Count != 0)
             {
-                myCard02.Add(cardController);
-                cardController.DoAnimtion(cardParent02, jumpTime);
+                clubCards[0].ThrowCardAnimation(myThrowCardPos, staticSeatIndex);
             }
-
-        }
-
-        public void OnCompleteAnimation()
-        {
-            if (myCard01.Count >= 2)
+            else if (CallBreakGameManager.instance.currentCard.cardDetail.cardType == CardType.Diamond && diamondCards.Count != 0)
             {
-                ShowAndHideHud01(true);
-                UpdateTheScoreValue01(ReturnScore(myCard01));
+                diamondCards[0].ThrowCardAnimation(myThrowCardPos, staticSeatIndex);
             }
-            if (myCard02.Count >= 2)
+            else if (spadeCards.Count != 0)
             {
-                ShowAndHideHud02(true);
-                UpdateTheScoreValue02(ReturnScore(myCard02));
+                spadeCards[0].ThrowCardAnimation(myThrowCardPos, staticSeatIndex);
             }
-            CallBreakUIManager.Instance.gamePlayController.splitButton.interactable = CheckForSplit();
-        }
-
-        public void FoldYourCards()
-        {
-            horizontalLayoutGroup01.enabled = false;
-            horizontalLayoutGroup02.enabled = false;
-            foreach (var item in myCard01)
-            {
-                item.cardImage.sprite = CallBreakCardAnimation.instance.cardBackSprite;
-                item.transform.SetParent(transform);
-            }
-            foreach (var item in myCard02)
-            {
-                item.cardImage.sprite = CallBreakCardAnimation.instance.cardBackSprite;
-                item.transform.SetParent(transform);
-            }
-            Invoke(nameof(CollectCards), 1f);
-        }
-
-        public void CollectCards()
-        {
-            foreach (var item in myCard01)
-                item.transform.DOMove(myCard01[0].transform.position, 0.5f).SetEase(Ease.Linear);
-            foreach (var item in myCard02)
-                item.transform.DOMove(myCard02[0].transform.position, 0.5f).SetEase(Ease.Linear);
-
-            Invoke(nameof(MoveCardsToWasteCard), 2f);
-        }
-
-        public void MoveCardsToWasteCard()
-        {
-            foreach (var item in myCard01)
-                item.transform.DOMove(CallBreakUIManager.Instance.gamePlayController.dealersFoldPosition.transform.position, 0.5f).SetEase(Ease.Linear);
-            foreach (var item in myCard02)
-                item.transform.DOMove(CallBreakUIManager.Instance.gamePlayController.dealersFoldPosition.transform.position, 0.5f).SetEase(Ease.Linear);
-        }
-
-        public void UserTurnForHitAndStand()
-        {
-            HighlightsCards(new Vector3(.75f, .75f, .75f), myCard01);
-            HighlightsCards(new Vector3(.75f, .75f, .75f), myCard02);
-
-            if (!isSplit)
-                HighlightsCards(Vector3.one, myCard01);
             else
-                HighlightsCards(Vector3.one, myCard02);
-        }
-
-        public void HighlightsCards(Vector3 scaleOfCards, List<CallBreakCardController> cards)
-        {
-            foreach (var item in cards)
-                item.transform.localScale = scaleOfCards;
-        }
-
-        public string ReturnScore(List<CallBreakCardController> cardControllers)
-        {
-            int score = 0;
-            string scoreString = string.Empty;
-            for (int i = 0; i < cardControllers.Count; i++)
             {
-                score += cardControllers[i].cardDetail.cardValue;
-                if (score > 21)
+                if (myCards.Count != 0)
                 {
-                    OpenTheUserToolTips("BUSTED");
-                    CallBreakUIManager.Instance.gamePlayController.OnButtonClicked("Stand");
+                    myCards.Sort((a, b) => b.cardDetail.value.CompareTo(a.cardDetail.value));
+                    myCards[myCards.Count - 1].ThrowCardAnimation(myThrowCardPos, staticSeatIndex);
                 }
-                else if (score > 21 && cardControllers[i].cardDetail.cardNumber == 14)
-                {
-                    scoreString = $"{score}";
-                }
-                else if (score < 21 && cardControllers[i].cardDetail.cardNumber == 14)
-                {
-                    scoreString = $"{score}/{score - 9}";
-                }
-                scoreString = $"{score}";
-            }
-            IEnumerable<CallBreakCardController> elementsWith14 = cardControllers.Where(x => x.cardDetail.cardNumber == 14);
-            if (elementsWith14.Count() == 2)
-            {
-
-            }
-            return scoreString;
-        }
-
-        public void UserStand()
-        {
-
-        }
-
-        public void ShowAllCardOfDealer()
-        {
-            Debug.Log($"<color><b> ShowAllCardOfDealer </b></color>");
-            for (int i = 0; i < myCard01.Count; i++)
-                myCard01[i].cardImage.sprite = myCard01[i].cardDetail.cardSprite;
-
-            ShowAndHideHud01(true);
-            if (ReturnDealerCardScore(myCard01) >= 17)
-            {
-                Debug.Log($"<color><b> STAND </b></color>");
-                CallBreakUIManager.Instance.gamePlayController.OnButtonClicked("Stand");
-            }
-            else if (ReturnDealerCardScore(myCard01) < 17)
-            {
-                Debug.Log($"<color><b> HIT </b></color>");
-                CallBreakUIManager.Instance.gamePlayController.OnButtonClicked("Hit");
             }
         }
 
-        public void ClickedOnSplit()
+        void ResetCardList()
         {
-            if (CheckForSplit())
-            {
-                isSplit = true;
-                myCard01[1].transform.SetParent(cardParent02);
-                myCard02.Add(myCard01[1]);
-                myCard01.RemoveAt(1);
-
-                cardParent02.gameObject.SetActive(true);
-                totalBetAmount += totalBetAmount;
-                userTotalBetAmountText.text = CallBreakUtilities.AbbreviateNumber(totalBetAmount);
-
-                ShowAndHideHud01(true);
-                UpdateTheScoreValue01(ReturnScore(myCard01));
-
-                ShowAndHideHud02(true);
-                UpdateTheScoreValue02(ReturnScore(myCard02));
-            }
-
+            spadeCards.Clear();
+            heartCards.Clear();
+            clubCards.Clear();
+            diamondCards.Clear();
         }
 
-        internal void OpenTheUserToolTips(string status)
+        public void UpdateCardInGroup()
         {
-            UpdateUserToolTip(status);
+            ResetCardList();
+            for (int i = 0; i < myCards.Count; i++)
+            {
+                if (myCards[i].cardDetail.cardType == CardType.Spade)
+                    spadeCards.Add(myCards[i]);
+                else if (myCards[i].cardDetail.cardType == CardType.Heart)
+                    heartCards.Add(myCards[i]);
+                else if (myCards[i].cardDetail.cardType == CardType.Club)
+                    clubCards.Add(myCards[i]);
+                else if (myCards[i].cardDetail.cardType == CardType.Diamond)
+                    diamondCards.Add(myCards[i]);
+            }
+
+            SortCardData(spadeCards);
+            SortCardData(heartCards);
+            SortCardData(clubCards);
+            SortCardData(diamondCards);
+
+            myCards.Clear();
+            myCards.AddRange(spadeCards);
+            myCards.AddRange(heartCards);
+            myCards.AddRange(diamondCards);
+            myCards.AddRange(clubCards);
+        }
+
+        internal void SortCardData(List<CallBreakCardController> cardControllers)
+        {
+            cardControllers.Sort((a, b) => b.cardDetail.value.CompareTo(a.cardDetail.value));
+        }
+
+        internal void RemoveSuitCard(CallBreakCardController cardController)
+        {
+            if (heartCards.Contains(cardController)) heartCards.Remove(cardController);
+            else if (clubCards.Contains(cardController)) clubCards.Remove(cardController);
+            else if (diamondCards.Contains(cardController)) diamondCards.Remove(cardController);
+            else if (spadeCards.Contains(cardController)) spadeCards.Remove(cardController);
+        }
+
+        internal void HighLightCard()
+        {
+            Debug.LogError(" PlayerData || HighLightCard ");
+
+            ActiveAllSelfPlayerCard(true);
+            if (CallBreakGameManager.instance.currentCard.cardDetail.cardType == CardType.Heart && heartCards.Count != 0)
+            {
+                CallBreakUIManager.Instance.cardSymbolToolTip.sprite = CallBreakUIManager.Instance.heartSymbol;
+                heartCards.ForEach(c => c.transform.GetChild(0).gameObject.SetActive(false));
+            }
+            else if (CallBreakGameManager.instance.currentCard.cardDetail.cardType == CardType.Club && clubCards.Count != 0)
+            {
+                CallBreakUIManager.Instance.cardSymbolToolTip.sprite = CallBreakUIManager.Instance.clubSymbol;
+                clubCards.ForEach(c => c.transform.GetChild(0).gameObject.SetActive(false));
+            }
+            else if (CallBreakGameManager.instance.currentCard.cardDetail.cardType == CardType.Diamond && diamondCards.Count != 0)
+            {
+                CallBreakUIManager.Instance.cardSymbolToolTip.sprite = CallBreakUIManager.Instance.diamondSymbol;
+                diamondCards.ForEach(c => c.transform.GetChild(0).gameObject.SetActive(false));
+            }
+            else if (spadeCards.Count != 0)
+            {
+                CallBreakUIManager.Instance.cardSymbolToolTip.sprite = CallBreakUIManager.Instance.spadeSymbol;
+                spadeCards.ForEach(c => c.transform.GetChild(0).gameObject.SetActive(false));
+            }
+            else
+            {
+                ActiveAllSelfPlayerCard(false);
+            }
+        }
+
+        internal void ScoreBoardUpdate()
+        {
+            if (currentBidScore == totalBid)
+            {
+                roundScore[CallBreakGameManager.instance.currentRound - 1] = totalBid;
+            }
+            else if (currentBidScore > totalBid)
+            {
+                float tempScore = currentBidScore - totalBid;
+                roundScore[CallBreakGameManager.instance.currentRound - 1] = totalBid + (tempScore / 10);
+            }
+            else
+            {
+                roundScore[CallBreakGameManager.instance.currentRound - 1] = -totalBid;
+            }
+        }
+
+
+
+        internal void ActiveAllSelfPlayerCard(bool isActive)
+        {
+            foreach (var item in myCards)
+            {
+                item.transform.GetChild(0).gameObject.SetActive(isActive);
+            }
+        }
+
+        internal void BidToolTipAnimation()
+        {
+            Debug.LogError($"=========>{2121}");
+            SetMyBid();
             bidObjectToolTip.SetActive(true);
             bidObjectToolTip.transform.localScale = Vector3.zero;
             bidObjectToolTip.transform.DOScale(Vector3.one, .3f).SetEase(Ease.OutExpo);
+            bidObjectToolTip.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Bid " + totalBid;
         }
 
+        internal void BidSelection()
+        {
+            totalScore = 0;
+            for (int i = 0; i < myCards.Count; i++)
+            {
+                if (myCards[i].cardDetail.value >= 10)
+                {
+                    totalScore += myCards[i].cardDetail.value;
+                }
+            }
+            if (totalScore >= 80)
+            {
+                totalBid = 6;
+            }
+            else if (totalScore >= 60)
+            {
+                totalBid = 5;
+            }
+            else if (totalScore >= 40)
+            {
+                totalBid = 3;
+            }
+            else if (totalScore >= 20)
+            {
+                totalBid = 2;
+            }
+            else
+            {
+                totalBid = 1;
+            }
+        }
 
         internal void ResetPlayerData()
         {
-            isSplit = false;
-            totalBetAmount = 0;
-            currentMyCardListIndex = 0;
+            foreach (var card in myCards)
+                Destroy(card.gameObject);
 
-            foreach (var item in myCard01)
-                Destroy(item.gameObject);
-
-            foreach (var item in myCard02)
-                Destroy(item.gameObject);
-
-            myCard01.Clear();
-            myCard02.Clear();
-
-            userTotalBetAmount.SetActive(false);
-
-            ShowAndHideHud01(false);
-            ShowAndHideHud02(false);
-
-            cardParent02.gameObject.SetActive(false);
-            UpdateUserToolTip("");
+            myCards.Clear();
+            myCards = new List<CallBreakCardController>();
+            currentBidScore = 0;
+            totalBid = 0;
+            SetMyBid();
             bidObjectToolTip.SetActive(false);
+
+            spadeCards = new List<CallBreakCardController>();
+            heartCards = new List<CallBreakCardController>();
+            clubCards = new List<CallBreakCardController>();
+            diamondCards = new List<CallBreakCardController>();
             ResetUserTimer();
         }
 
-        public bool CheckForSplit()
-        {
-            if (myCard01.Count >= 2)
-            {
-                if (myCard01[0].cardDetail.cardValue == myCard01[1].cardDetail.cardValue && myCard01[0].cardDetail.cardValue > 8)
-                    return true;
-                else
-                    return false;
-            }
-            else return false;
-        }
-
-        public int ReturnDealerCardScore(List<CallBreakCardController> cardControllers)
-        {
-            int score = 0;
-            for (int i = 0; i < cardControllers.Count; i++)
-                score += cardControllers[i].cardDetail.cardValue;
-            return score;
-        }
+        public void ResetUserTimer() => turnTimer.TimerObjectDeActivate();
     }
 }
 

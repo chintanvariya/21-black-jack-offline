@@ -129,7 +129,7 @@ namespace FGSOfflineCallBreak
             List<string> randomStrings = GenerateRandomStrings(50, 7);
             List<int> allNumber = new List<int>();
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 20; i++)
             {
                 allNumber.Add(i);
             }
@@ -137,7 +137,7 @@ namespace FGSOfflineCallBreak
 
             allNumber = allNumber.OrderBy(a => Guid.NewGuid()).ToList();
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 20; i++)
             {
                 allNumber.Add(i);
 
@@ -152,13 +152,13 @@ namespace FGSOfflineCallBreak
                     botDetails.userKeys = UnityEngine.Random.Range(75, 100);
                     botDetails.userChips = UnityEngine.Random.Range(100000, 1100000);
                 }
-                else if (i > 15 && i < 25)
+                else if (i > 5 && i < 10)
                 {
                     botDetails.userChips = UnityEngine.Random.Range(10000, 100000);
 
                     botDetails.userKeys = UnityEngine.Random.Range(50, 75);
                 }
-                else if (i > 25 && i < 35)
+                else if (i > 10 && i < 20)
                 {
                     botDetails.userChips = UnityEngine.Random.Range(1000, 10000);
                     botDetails.userKeys = UnityEngine.Random.Range(25, 50);

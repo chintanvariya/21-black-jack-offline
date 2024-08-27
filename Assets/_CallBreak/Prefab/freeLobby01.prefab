@@ -1235,7 +1235,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4640712148751702466}
+      - m_Target: {fileID: 6051836143747561211}
         m_TargetAssemblyTypeName: FGSOfflineCallBreak.CallBreakLobbyUiController,
           Assembly-CSharp
         m_MethodName: OnButtonClicked
@@ -1549,7 +1549,7 @@ GameObject:
   - component: {fileID: 8854087657355437303}
   - component: {fileID: 5515270505201907103}
   - component: {fileID: 6695592682306838951}
-  - component: {fileID: 4640712148751702466}
+  - component: {fileID: 6051836143747561211}
   m_Layer: 5
   m_Name: freeLobby01
   m_TagString: Untagged
@@ -1664,7 +1664,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &4640712148751702466
+--- !u!114 &6051836143747561211
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

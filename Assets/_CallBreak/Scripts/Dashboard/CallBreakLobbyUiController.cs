@@ -21,8 +21,8 @@ namespace FGSOfflineCallBreak
         [Header("LOBBY AMOUNT")]
         public string keysAmount;
 
-        public int minimumTableAmount;
-        public int maximumTableAmount;
+        public float minimumTableAmount;
+        public float maximumTableAmount;
 
         [Header("Dashboard Controller")]
         public CallBreakDashboardController dashboardController;

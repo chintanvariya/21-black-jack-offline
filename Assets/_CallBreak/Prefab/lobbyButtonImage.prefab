@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 7950967761973710904}
   - component: {fileID: 7923816428069477777}
   - component: {fileID: 8530378414893507676}
-  - component: {fileID: 2749958067499012555}
+  - component: {fileID: 1561326639735185104}
   m_Layer: 5
   m_Name: lobbyButtonImage
   m_TagString: Untagged
@@ -257,7 +257,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2749958067499012555}
+      - m_Target: {fileID: 1561326639735185104}
         m_TargetAssemblyTypeName: FGSOfflineCallBreak.CallBreakLobbyTypeUi, Assembly-CSharp
         m_MethodName: OnButtonClicked
         m_Mode: 1
@@ -289,7 +289,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &2749958067499012555
+--- !u!114 &1561326639735185104
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -298,7 +298,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7502064727906810599}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39605acc585dd4f3986f193c5b8bd17f, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b511078a06aa844f80ccb224ee37dd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   staticIndex: 0

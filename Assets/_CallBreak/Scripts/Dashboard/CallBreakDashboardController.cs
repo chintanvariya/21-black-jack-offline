@@ -6,6 +6,7 @@ using UnityEditor.Experimental;
 using GoogleMobileAds.Api;
 using System;
 using UnityEditor;
+using BlackJackOffline;
 
 namespace FGSOfflineCallBreak
 {
@@ -32,7 +33,11 @@ namespace FGSOfflineCallBreak
 
         public CallBreakProfileUiController profileUiController;
 
-        [Header("LOBBY PREFAB")]
+        [Header("LEVEL BUTTONS")]
+        public List<Button> allLevelTypeButtons;
+        public List<Image> allLevelType;
+        public List<TextMeshProUGUI> allLevelTypeText;
+
         public CallBreakLobbyUiController lobbyPrefab;
         public Transform parentOfLobby;
 
@@ -48,11 +53,6 @@ namespace FGSOfflineCallBreak
         public CallBreakLobbyTypeUi prefabLobbyTypeUi;
         public Transform parentOfLobbyType;
         public List<CallBreakLobbyTypeUi> allLevelTypes;
-
-        private void Awake()
-        {
-            //OpenScreen();
-        }
 
         public void OpenScreen()
         {
@@ -140,6 +140,40 @@ namespace FGSOfflineCallBreak
             }
         }
 
+        public void RoundSectionActivate(bool isActive)
+        {
+            foreach (var item in quickRoundObj)
+            {
+                item.SetActive(isActive);
+            }
+        }
+        public void RoundBtnClick(int roundNumber)
+        {
+            RoundInfoObj(false);
+            CallBreakSoundManager.PlaySoundEvent(SoundEffects.Click);
+            string roundText = string.Empty;
+            if (roundNumber == DefaultRound)
+            {
+                standardModeBtn.sprite = modeSelectBG;
+                quickModeBtn.sprite = normalBG;
+                RoundSectionActivate(true);
+                roundText = "Standard";
+            }
+            else
+            {
+                quickModeBtn.sprite = modeSelectBG;
+                standardModeBtn.sprite = normalBG;
+                RoundSectionActivate(false);
+                roundText = "Quick";
+            }
+            CallBreakGameManager.instance.totalRound = roundNumber;
+
+            //foreach (var item in allLobbies)
+            //    item.UpdateRoundText(roundText);
+        }
+
+
+
         public void OnButtonClicked(int buttonIndex)
         {
             foreach (var item in allIcons)
@@ -151,26 +185,89 @@ namespace FGSOfflineCallBreak
             {
                 case 0:
                     CallBreakUIManager.Instance.dailyRewardManager.OpenScreen();
+                    FirebaseController.instance.FirelogEvent("DailyBonus", "DashboardController", "CallBreak");
                     break;
                 case 1:
                     CallBreakUIManager.Instance.itemPurchase.OpenScreen();
+                    FirebaseController.instance.FirelogEvent("StoreStore", "DashboardController", "CallBreak");
                     break;
                 case 2:
                     CallBreakUIManager.Instance.preLoaderController.OpenPreloader();
                     GoogleMobileAds.Sample.RewardedAdController.ShowRewardedAd();
+                    FirebaseController.instance.FirelogEvent("100FreeCoins", "DashboardController", "CallBreak");
                     break;
                 case 3:
                     CloseScreen();
                     if (spinnerHourlyRewardController.Ready())
                         CallBreakUIManager.Instance.spinnerController.OpenScreen(spinnerHourlyRewardController);
+                    FirebaseController.instance.FirelogEvent("LuckySpin", "DashboardController", "CallBreak");
                     break;
                 case 4:
                     CallBreakUIManager.Instance.collectRewardController.OpenCollectReward("Free Coins", 200, hourlyRewardController);
+                    FirebaseController.instance.FirelogEvent("FreeCoins", "DashboardController", "CallBreak");
                     break;
                 default:
                     break;
             }
         }
+
+        public void InfoBtn(string roundState)
+        {
+            RoundInfoObj(true);
+
+            if (roundState == "Standard")
+            {
+                roundInfoToolTip.GetComponent<RectTransform>().anchoredPosition = new Vector2(-175, -125);
+                roundInfoToolTip.GetComponentInChildren<TextMeshProUGUI>().text = CallBreakConstants.StandardRoundInfoDes;
+            }
+            else
+            {
+                roundInfoToolTip.GetComponent<RectTransform>().anchoredPosition = new Vector2(115, -125);
+                roundInfoToolTip.GetComponentInChildren<TextMeshProUGUI>().text = CallBreakConstants.QuickRoundInfoDes;
+            }
+        }
+
+        public void RoundInfoObj(bool isActive)
+        {
+            roundInfoToolTip.SetActive(isActive);
+        }
+
+
+        public void UpdateTheLobbiesDetails()
+        {
+            for (int i = 0; i < allLobbies.Count; i++)
+            {
+                int lobbyAmount = allLobbyAmount[0];
+                string keys = string.Empty;
+                string round = "Standard";
+                string playButton = string.Empty;
+                string winAmount = string.Empty;
+
+                Sprite practicesAndCoin;
+                if (i == 0)
+                {
+                    keys = "Practice";
+                    playButton = "Play";
+                    winAmount = $"Free";
+                    practicesAndCoin = practiesAndCoins[0];
+                    //allLobbies[i].bg.sprite = freeLobbyBg;
+                }
+                else
+                {
+                    lobbyAmount = allLobbyAmount[i];
+                    keys = $"+{CallBreakUtilities.AbbreviateNumber(lobbyAmount / 2)}";
+                    practicesAndCoin = practiesAndCoins[1];
+                    playButton = $"Play {CallBreakUtilities.AbbreviateNumber(lobbyAmount)}";
+                    winAmount = $"{CallBreakUtilities.AbbreviateNumber(lobbyAmount * 4)}";
+                    //allLobbies[i].bg.sprite = coinLoobyBG;
+                }
+                //allLobbies[i].UpdateLobbyText(practicesAndCoin, lobbyAmount, keys, round, playButton, winAmount);
+            }
+
+            gameObject.SetActive(true);
+        }
+
+
 
         public void SelectedLobbyType(CallBreakLobbyTypeUi lobbyType)
         {
@@ -243,13 +340,13 @@ namespace FGSOfflineCallBreak
         public void OnButtonPlayNow(CallBreakLobbyUiController lobbyUiController)
         {
             currentLobbyPlay = lobbyUiController;
-            //if (CallBreakConstants.callBreakRemoteConfig.adsDetails.isShowInterstitialAdsOnLobby)
-            //{
-            //    CallBreakUIManager.Instance.preLoaderController.OpenPreloader();
-            //    GoogleMobileAds.Sample.InterstitialAdController.ShowInterstitialAd();
-            //}
-            //else
-            OnAdFullScreenContentClosedHandler();
+            if (CallBreakConstants.callBreakRemoteConfig.adsDetails.isShowInterstitialAdsOnLobby)
+            {
+                CallBreakUIManager.Instance.preLoaderController.OpenPreloader();
+                GoogleMobileAds.Sample.InterstitialAdController.ShowInterstitialAd();
+            }
+            else
+                OnAdFullScreenContentClosedHandler();
         }
 
         private void OnEnable()
@@ -276,16 +373,19 @@ namespace FGSOfflineCallBreak
             GoogleMobileAds.Sample.RewardedAdController.OnRewardedAdGranted -= OnRewardedAdGranted;
         }
 
+        public GameObject gamePlay;
+        public BlackJackDealer dealer;
         public void OnInterstitialAdNotReady()
         {
             CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
             //CallBreakUIManager.Instance.toolTipsController.OpenToolTips("AdsIsNotReady", "Ad is not ready yet !!", "");
 
-            CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
-            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
-            CallBreakUIManager.Instance.gamePlayController.OpenScreen();
             profileUiController.CloseScreen();
             CloseScreen();
+                           
+
+            gamePlay.SetActive(true);
+            //dealer.StartNewRound(false);
 
             //AdsIsNotReady
         }
@@ -307,8 +407,10 @@ namespace FGSOfflineCallBreak
             else
             {
                 CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
+                gamePlay.SetActive(true);
+                dealer.StartNewRound(false);
+
                 profileUiController.CloseScreen();
-                CallBreakUIManager.Instance.gamePlayController.OpenScreen();
                 CloseScreen();
             }
         }
