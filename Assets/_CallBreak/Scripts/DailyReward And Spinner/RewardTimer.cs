@@ -57,40 +57,40 @@ namespace FGSOfflineCallBreak
                 {
                     return;
                 }
-                if (Ready())
-                {
-                    spinTextObj.SetActive(true);
-                    adTextObj.SetActive(false);
-                    uiSpinButton.interactable = true;
-                    //Time.transform.parent.gameObject.SetActive(false);
-                    return;
-                }
-                else
-                {
-                    adTextObj.SetActive(true);
-                    spinTextObj.SetActive(false);
+                //else if (Ready())
+                //{
+                //    spinTextObj.SetActive(true);
+                //    adTextObj.SetActive(false);
+                //    uiSpinButton.interactable = true;
+                //    //Time.transform.parent.gameObject.SetActive(false);
+                //    return;
+                //}
+                //else
+                //{
+                //    adTextObj.SetActive(true);
+                //    spinTextObj.SetActive(false);
 
-                    //if (AdmobManager.isRewardLoad)
-                    //{
-                    //    uiSpinButton.interactable = true;
-                    //}
-                }
+                //    //if (AdmobManager.isRewardLoad)
+                //    //{
+                //    //    uiSpinButton.interactable = true;
+                //    //}
+                //}
 
-                ulong diff = ((ulong)DateTime.Now.Ticks - lastTimeClicked);
-                ulong m = diff / TimeSpan.TicksPerMillisecond;
-                float secondsLeft = (float)(msToWait - m) / 1000.0f;
+                //ulong diff = ((ulong)DateTime.Now.Ticks - lastTimeClicked);
+                //ulong m = diff / TimeSpan.TicksPerMillisecond;
+                //float secondsLeft = (float)(msToWait - m) / 1000.0f;
 
-                string r = "";
-                //HOURS
-                r += ((int)secondsLeft / 3600).ToString() + " : ";
-                secondsLeft -= ((int)secondsLeft / 3600) * 3600;
-                //MINUTES
-                r += ((int)secondsLeft / 60).ToString("00") + " : ";
-                //SECONDS
-                r += (secondsLeft % 60).ToString("00");
-                //  Time.text = r;
-                Debug.LogError($"{r}");
-                // Time.transform.parent.gameObject.SetActive(true);
+                //string r = "";
+                ////HOURS
+                //r += ((int)secondsLeft / 3600).ToString() + " : ";
+                //secondsLeft -= ((int)secondsLeft / 3600) * 3600;
+                ////MINUTES
+                //r += ((int)secondsLeft / 60).ToString("00") + " : ";
+                ////SECONDS
+                //r += (secondsLeft % 60).ToString("00");
+                ////  Time.text = r;
+                //Debug.LogError($"{r}");
+                //// Time.transform.parent.gameObject.SetActive(true);
             }
         }
 

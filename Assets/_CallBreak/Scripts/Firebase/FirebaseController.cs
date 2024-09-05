@@ -5,9 +5,9 @@ using Firebase.Crashlytics;
 using Firebase.RemoteConfig;
 using System.Threading.Tasks;
 using System;
+using System.Collections;
 using GoogleMobileAds.Samples;
 using static FGSOfflineCallBreak.CallBreakRemoteConfigClass;
-using System.Collections;
 
 namespace FGSOfflineCallBreak
 {
@@ -37,6 +37,17 @@ namespace FGSOfflineCallBreak
             }
             Debug.LogError(JsonUtility.ToJson(remoteConfigData));
 
+            CallBreakConstants.callBreakRemoteConfig = remoteConfigData;
+            if (Application.internetReachability != NetworkReachability.NotReachable)
+            {
+                FireBaseInitialize();
+                updatesBeforeException = 0;
+            }
+            else
+            {
+                //CallBreakUIManager.Instance.splashScreen.StartAnimation();
+                //CallBreakUIManager.Instance.noInternetController.OpenScreen();
+            }
         }
 
         public CallBreakRemoteConfig remoteConfigData;
@@ -81,24 +92,28 @@ namespace FGSOfflineCallBreak
 
                     //if (CallBreakUIManager.Instance.splashScreen.gameObject.activeSelf)
                     //    CallBreakUIManager.Instance.splashScreen.StartAnimation();
+
+                    Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
+                    Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
                 });
         }
 
         private IEnumerator Start()
         {
-            CallBreakConstants.callBreakRemoteConfig = remoteConfigData;
             yield return new WaitForSeconds(1f);
-            if (Application.internetReachability != NetworkReachability.NotReachable)
-            {
-                FireBaseInitialize();
-                updatesBeforeException = 0;
-            }
-            else
-            {
-                //CallBreakUIManager.Instance.noInternetController.OpenScreen();
-            }
             CallBreakUIManager.Instance.splashScreen.StartAnimation();
         }
+
+        public void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
+        {
+            Debug.Log("Received Registration Token: " + token.Token);
+        }
+
+        public void OnMessageReceived(object sender, Firebase.Messaging.MessageReceivedEventArgs e)
+        {
+            Debug.Log("Received a new message from: " + e.Message.From);
+        }
+
 
         private void OnEnable()
         {

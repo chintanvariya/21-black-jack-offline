@@ -11,6 +11,8 @@ namespace BlackJackOffline
     public class BlackJackPlaceBetArea : MonoBehaviour
     {
         [Header("--------------------- Card Bet Area --------------------- ")]
+
+        public HorizontalLayoutGroup layoutGroup;
         [SerializeField]
         internal List<BlackJackCard> cards;
         [SerializeField]
@@ -24,7 +26,7 @@ namespace BlackJackOffline
         [SerializeField]
         internal bool isPlayerPlaceBet;
         [SerializeField]
-        internal bool isAreaTurnOver , isBlackJack , isBust;
+        internal bool isAreaTurnOver, isBlackJack, isBust;
         [SerializeField]
         internal int areaCardValue;
         [SerializeField]
@@ -39,6 +41,7 @@ namespace BlackJackOffline
         private BlackJackPlayer player;
         [SerializeField]
         private GameObject winAnimationObject;
+
 
         internal void SetPlayerPlaceBet(float placebetAmount)
         {
@@ -115,7 +118,7 @@ namespace BlackJackOffline
                     scoreValue.Add(cValueCounter);
                 }
             }
-            
+
             scoreValue = scoreValue.Distinct().ToList();
             int bustValue = scoreValue.Find(x => x > 21);
             areaCardValue = scoreValue.Max();
@@ -189,7 +192,7 @@ namespace BlackJackOffline
                 //Player
                 BlackJackSettingManager.instance.PlaySound("Turn");
                 BlackJackSettingManager.instance.PlayVirationEffect();
-                player.StartTimer(BlackJackGameManager.instance.turnTimer , "UserTurn" , placeBetAreaImage);
+                player.StartTimer(BlackJackGameManager.instance.turnTimer, "UserTurn", placeBetAreaImage);
                 BlackJackGameManager.instance.betButtons.UserTurnStart(this);
             }
             else
@@ -234,7 +237,7 @@ namespace BlackJackOffline
 
         IEnumerator BotTurnStartDelay()
         {
-            yield return new WaitForSeconds(Random.Range(0, BlackJackGameManager.instance.turnTimer - 3));
+            yield return new WaitForSeconds(Random.Range(5, BlackJackGameManager.instance.turnTimer - 8));
             bool botSplit = false;
             if (player.FindSplitButtonAction(this))
             {
@@ -265,7 +268,7 @@ namespace BlackJackOffline
                     scoreObject.SetActive(false);
                     BlackJackGameManager.instance.dealer.StopUserTurn();
                     player.DoubleBet(playerBetAmount, this, DoubleBetPlaced);
-                } 
+                }
                 else
                 {
                     //Hit
@@ -358,7 +361,7 @@ namespace BlackJackOffline
             }
             yield return new WaitForSeconds(0.05f);
             ResetPlaceBetArea();
-           
+
             foreach (var item in emptyCardList)
             {
                 item.transform.DOScaleX(0, 0.1f).SetEase(Ease.Linear).OnComplete(() =>
@@ -406,6 +409,7 @@ namespace BlackJackOffline
                 StopCoroutine(loss);
             }
             loss = StartCoroutine(LostAnimation());
+
         }
 
         IEnumerator LostAnimation()
@@ -502,4 +506,3 @@ namespace BlackJackOffline
         #endregion
     }
 }
- 

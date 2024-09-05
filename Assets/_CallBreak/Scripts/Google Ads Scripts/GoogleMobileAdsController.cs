@@ -34,7 +34,7 @@ namespace GoogleMobileAds.Samples
         private void Start()
         {
             Debug.Log("============");
-            InitializeGoogleMobile();
+            //InitializeGoogleMobile();
         }
         // The Google Mobile Ads Unity plugin needs to be run only once.
         private static bool? _isInitialized;

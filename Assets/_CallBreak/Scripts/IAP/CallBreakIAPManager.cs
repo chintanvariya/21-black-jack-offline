@@ -22,6 +22,7 @@ namespace FGSOfflineCallBreak
 
         private string environment = "production";
 
+        [Obsolete]
         async void Start()
         {
             if (Instance == null)
@@ -48,6 +49,7 @@ namespace FGSOfflineCallBreak
             // If we haven't set up the Unity Purchasing reference
         }
 
+        [Obsolete]
         public void InitializePurchasing()
         {
             // If we have already connected to Purchasing ...

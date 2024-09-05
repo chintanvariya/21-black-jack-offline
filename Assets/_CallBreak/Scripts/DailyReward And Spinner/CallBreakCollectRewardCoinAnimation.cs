@@ -130,6 +130,9 @@ namespace FGSOfflineCallBreak
                 CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserKeys();
                 CallBreakUIManager.Instance.dashboardController.OpenScreen();
 
+                if (doAnimationOfThisScreen == "Spinner" && !CallBreakUIManager.Instance.spinnerController.isFromAds)
+                    CallBreakUIManager.Instance.dashboardController.CloseScreen();
+
             }
         }
     }

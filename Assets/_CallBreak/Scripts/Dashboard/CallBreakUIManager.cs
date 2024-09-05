@@ -27,8 +27,6 @@ namespace FGSOfflineCallBreak
 
         [Header(" ------------ List And Array ------------")]
         [Space(10)]
-        private bool isToolTipTurnAnimation = true;
-        private bool isCardToolTipAnimation = true;
 
         public CallBreakSplashScreen splashScreen;
         public CallBreakRegisterUserController registerUserController;

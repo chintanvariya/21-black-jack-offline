@@ -107,7 +107,7 @@ namespace GoogleMobileAds.Sample
         // Raised when the ad closed full screen content.
         public static event Action OnNativeOverlayAdFullScreenContentClosed;
         // Raised when the ad failed to open full screen content.
-        public static event Action<AdError> OnNativeOverlayAdFullScreenContentFailed;
+        //public static event Action<AdError> OnNativeOverlayAdFullScreenContentFailed;
 
         private static void RegisterEventHandlers(NativeOverlayAd ad)
         {

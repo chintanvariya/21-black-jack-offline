@@ -6,7 +6,6 @@ using UnityEditor.Experimental;
 using GoogleMobileAds.Api;
 using System;
 using UnityEditor;
-using BlackJackOffline;
 
 namespace FGSOfflineCallBreak
 {
@@ -373,8 +372,6 @@ namespace FGSOfflineCallBreak
             GoogleMobileAds.Sample.RewardedAdController.OnRewardedAdGranted -= OnRewardedAdGranted;
         }
 
-        public GameObject gamePlay;
-        public BlackJackDealer dealer;
         public void OnInterstitialAdNotReady()
         {
             CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
@@ -382,12 +379,6 @@ namespace FGSOfflineCallBreak
 
             profileUiController.CloseScreen();
             CloseScreen();
-                           
-
-            gamePlay.SetActive(true);
-            //dealer.StartNewRound(false);
-
-            //AdsIsNotReady
         }
 
 
@@ -407,8 +398,6 @@ namespace FGSOfflineCallBreak
             else
             {
                 CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
-                gamePlay.SetActive(true);
-                dealer.StartNewRound(false);
 
                 profileUiController.CloseScreen();
                 CloseScreen();

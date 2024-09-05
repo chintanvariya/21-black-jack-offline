@@ -38,10 +38,6 @@ namespace FGSOfflineCallBreak
 
         public static int ReturnCurrentLevel(float levelProgress)
         {
-            for (int i = 0; i < CallBreakConstants.coinsToClearLevel.Count; i++)
-            {
-                Debug.LogError($"{CallBreakConstants.coinsToClearLevel[i]}");
-            }
             int currentLevel = 1;
 
             Debug.LogError($"{levelProgress}  => {CallBreakConstants.coinsToClearLevel[0]} => {CallBreakConstants.coinsToClearLevel[1]}");
@@ -64,36 +60,6 @@ namespace FGSOfflineCallBreak
             {
                 Debug.LogError($"{4}");
                 currentLevel = 4;
-            }
-            else if (levelProgress > CallBreakConstants.coinsToClearLevel[3] && levelProgress < CallBreakConstants.coinsToClearLevel[4])
-            {
-                Debug.LogError($"{5}");
-                currentLevel = 5;
-            }
-            else if (levelProgress > CallBreakConstants.coinsToClearLevel[5] && levelProgress < CallBreakConstants.coinsToClearLevel[5])
-            {
-                Debug.LogError($"{6}");
-                currentLevel = 6;
-            }
-            else if (levelProgress > CallBreakConstants.coinsToClearLevel[6] && levelProgress < CallBreakConstants.coinsToClearLevel[7])
-            {
-                Debug.LogError($"{7}");
-                currentLevel = 7;
-            }
-            else if (levelProgress > CallBreakConstants.coinsToClearLevel[7] && levelProgress < CallBreakConstants.coinsToClearLevel[8])
-            {
-                Debug.LogError($"{8}");
-                currentLevel = 8;
-            }
-            else if (levelProgress > CallBreakConstants.coinsToClearLevel[8] && levelProgress < CallBreakConstants.coinsToClearLevel[9])
-            {
-                Debug.LogError($"{9}");
-                currentLevel = 9;
-            }
-            else
-            {
-                Debug.LogError($"{10}");
-                currentLevel = 10;
             }
             return currentLevel;
         }

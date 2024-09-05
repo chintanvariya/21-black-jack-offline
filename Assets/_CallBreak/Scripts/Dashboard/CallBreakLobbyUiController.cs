@@ -34,7 +34,7 @@ namespace FGSOfflineCallBreak
             minAmountText.text = minAmount;
             maxAmountText.text = maxAmount;
             keysAmountText.text = keys;
-            buttonText.text = $"{ minAmount } / {maxAmount}";
+            buttonText.text = $"{minAmount} / {maxAmount}";
         }
 
 

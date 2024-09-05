@@ -1,5 +1,4 @@
 using DG.Tweening;
-using FGSOfflineCallBreak;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,24 +26,23 @@ namespace BlackJackOffline
         [SerializeField]
         private GameObject dealerCardObject;
         [SerializeField]
-        BlackJackPlayer player;
+        List<BlackJackPlayer> players;
         [Header("---------------------- Top Area Info --------------------")]
         [SerializeField]
         internal Transform dealerChipArea;
 
         int cValueCounter;
         Coroutine startNewRoundCoroutine, throwNewRoundCorotine, addNewCard, loadExtraCards, winnner;
-        BlackJackGameManager gameManager;
+        public BlackJackGameManager gameManager;
         public BlackJackGameBoardManager boradManager;
-        public BlackJackPooler pooler;
-        public List<BlackJackPlayer> players;
+        public List<BlackJackPlayer> allPlayers;
         BlackJackCardGenerator cardGenerator;
         BlackJackEmptyCard dealerEmptyCard;
 
         private void Start()
         {
             gameManager = BlackJackGameManager.instance;
-            //boradManager = gameManager.boradManager;
+            boradManager = gameManager.boradManager;
             players = boradManager.players;
             cardGenerator = boradManager.cardGenerator;
         }
@@ -78,73 +76,59 @@ namespace BlackJackOffline
         {
             if (!isNextRound)
             {
-                try
-                {
-                    //MIN || MAX || NAME
-                    float minValue = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount;
-                    float maxValue = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount;
-                    string lobbyUiName = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.lobbyTypeName.text;
-                    boradManager.LoadNewLobbyData(minValue, maxValue, lobbyUiName);
-                }
-                catch (Exception ex)
-                {
-                    Debug.Log($"{ex.ToString()}");
-                    throw;
-                }
-
+                boradManager.LoadNewLobbyData(gameManager.minValue, gameManager.maxValue, gameManager.lobbyName);
             }
             else
             {
-                float minValue = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount;
-                if (CallBreakGameManager.instance.selfUserDetails.userChips < minValue)
+                if (gameManager.userDetails.userChips < gameManager.minValue)
                 {
-                    int newLobbyIndex = 100;
-                    newLobbyIndex = gameManager.blackJackLobbies.FindIndex(x => x.minAmount <= CallBreakGameManager.instance.selfUserDetails.userChips);
-                    Debug.Log(" New Lobby Index ==> " + newLobbyIndex);
-                    if (newLobbyIndex == -1)
-                    {
-                        CallBreakUIManager.Instance.notEnoughCoinsController.OpenScreen("Not Enough Coins", "Insufficient coins! Watch a video for 500 free coins!", 500);
-
-                        yield return new WaitUntil(() => 1000 <= CallBreakGameManager.instance.selfUserDetails.userChips);
-
-                        var item = gameManager.blackJackLobbies[4];
-
-                        CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.lobbyTypeName.text = item.lobbyName;
-                        CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount = item.minAmount;
-                        CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount = item.maxAmount;
-                        //BlackJackDataManager.lobbyIndex = item.lobbyIndex;
-
-                        float _minValue = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount;
-                        float maxValue = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount;
-                        string lobbyUiName = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.lobbyTypeName.text;
-
-                        boradManager.LoadNewLobbyData(_minValue, maxValue, lobbyUiName);
-                    }
-                    else
-                    {
-                        var item = gameManager.blackJackLobbies[newLobbyIndex];
-                        CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.lobbyTypeName.text = item.lobbyName;
-                        CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount = item.minAmount;
-                        CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount = item.maxAmount;
-                        //BlackJackDataManager.lobbyIndex = item.lobbyIndex;
-                        string lobbyName = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.lobbyTypeName.text;
-                        boradManager.LoadNewLobbyData(CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount,
-                            CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount, lobbyName);
-                    }
+                    //int newLobbyIndex = 100;
+                    //newLobbyIndex = gameManager.blackJackLobbies.FindIndex(x => x.minAmount <= BlackJackDataManager.creditPoint);
+                    //Debug.Log(" New Lobby Index ==> " + newLobbyIndex);
+                    //if (newLobbyIndex == -1)
+                    //{
+                    //    gameManager.popupManager.SetAlertPopup("Insufficient Balance");
+                    //    yield return new WaitUntil(() => 1000 <= BlackJackDataManager.creditPoint);
+                    //    var item = gameManager.blackJackLobbies[4];
+                    //    BlackJackDataManager.lobbyName = item.lobbyName;
+                    //    BlackJackDataManager.lobbyMinValue = item.minAmount;
+                    //    BlackJackDataManager.lobbyMaxValue = item.maxAmount;
+                    //    BlackJackDataManager.lobbyIndex = item.lobbyIndex;
+                    //    boradManager.LoadNewLobbyData(BlackJackDataManager.lobbyMinValue, BlackJackDataManager.lobbyMaxValue, BlackJackDataManager.lobbyName);
+                    //}
+                    //else
+                    //{
+                    //    var item = gameManager.blackJackLobbies[newLobbyIndex];
+                    //    BlackJackDataManager.lobbyName = item.lobbyName;
+                    //    BlackJackDataManager.lobbyMinValue = item.minAmount;
+                    //    BlackJackDataManager.lobbyMaxValue = item.maxAmount;
+                    //    BlackJackDataManager.lobbyIndex = item.lobbyIndex;
+                    //    boradManager.LoadNewLobbyData(BlackJackDataManager.lobbyMinValue, BlackJackDataManager.lobbyMaxValue, BlackJackDataManager.lobbyName);
+                    //}
+                    boradManager.LoadNewLobbyData(gameManager.minValue, gameManager.maxValue, gameManager.lobbyName);
                 }
             }
-            pooler.ResetAtNewRoundStart();
+            gameManager.pooler.ResetAtNewRoundStart();
             //Reset Dealer Data
             ResetDealerDeatalis();
             //Start New Round 
             boradManager.NewRoundStart();
-            yield return new WaitUntil(() => totalPlayerRoundPlacebet == players.Count);
+            //yield return new WaitUntil(() => totalPlayerRoundPlacebet == players.Count);
+            yield return new WaitForSeconds(1f);// (() => totalPlayerRoundPlacebet == players.Count);
             //Start Card Animation
-            if (throwNewRoundCorotine != null)
+
+        }
+
+        public void ThrowNewRoundCorotine()
+        {
+            if (totalPlayerRoundPlacebet == players.Count)
             {
-                StopCoroutine(throwNewRoundCorotine);
+                if (throwNewRoundCorotine != null)
+                {
+                    StopCoroutine(throwNewRoundCorotine);
+                }
+                throwNewRoundCorotine = StartCoroutine(ThrowNewRoundCards());
             }
-            throwNewRoundCorotine = StartCoroutine(ThrowNewRoundCards());
         }
 
         private IEnumerator ThrowNewRoundCards()
@@ -298,9 +282,13 @@ namespace BlackJackOffline
 
         BlackJackCard FindCurrentCard(Transform cardPosition)
         {
+            if (cardGenerator.totalBoradCard.Count <= 0)
+            {
+                cardGenerator.CreateTotalCard();
+            }
             BlackJackCard card = gameManager.pooler.SpawnFromCards("Card", cardPosition);
-            Sprite cardSprite = cardGenerator.randomBoradCard[0];
-            cardGenerator.randomBoradCard.RemoveAt(0);
+            Sprite cardSprite = cardGenerator.totalBoradCard[0];
+            cardGenerator.totalBoradCard.RemoveAt(0);
             card.cardImage.sprite = cardSprite;
             card.gameObject.name = cardSprite.name;
             SetCardValueAndNumber(card, cardSprite);
@@ -694,13 +682,13 @@ namespace BlackJackOffline
             {
                 if (isWin)
                 {
-                    CallBreakGameManager.instance.selfUserDetails.userGameDetails.GameWon++;
+                    gameManager.userDetails.userGameDetails.GameWon++;
                 }
                 else
                 {
-                    CallBreakGameManager.instance.selfUserDetails.userGameDetails.GameLoss++;
+
+                    gameManager.userDetails.userGameDetails.GameLoss++;
                 }
-                CallBreakGameManager.instance.selfUserDetails.userGameDetails.GamePlayed++;
             }
         }
 
@@ -761,30 +749,5 @@ namespace BlackJackOffline
         }
         #endregion
 
-
-
-        public GameObject leavePopup;
-        public GameObject gamePlayObject;
-
-        public void OnButtonCliked(string buttonName)
-        {
-            switch (buttonName)
-            {
-                case "Yes":
-                    StopAllCoroutines();
-                    leavePopup.SetActive(false);
-                    gamePlayObject.SetActive(false);
-                    CallBreakUIManager.Instance.dashboardController.OpenScreen();
-                    break;
-                case "No":
-                    leavePopup.SetActive(false);
-                    break;
-                case "Open":
-                    leavePopup.SetActive(true);
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 }

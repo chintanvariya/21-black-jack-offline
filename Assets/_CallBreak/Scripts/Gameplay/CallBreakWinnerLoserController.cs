@@ -62,16 +62,16 @@ namespace FGSOfflineCallBreak
 
 
                 //if (CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.lobbyAmount <= 0)
-                //{
-                //    winCoinText.text = "Free";
-                //    homeButton.gameObject.SetActive(true);
-                //}
+                {
+                    winCoinText.text = "Free";
+                    homeButton.gameObject.SetActive(true);
+                }
                 //else
-                //{
-                //    collectButton.gameObject.SetActive(true);
-                //    collect2XButton.gameObject.SetActive(true);
-                //    winCoinText.text = "+" + CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.lobbyAmount * 4;
-                //}
+                {
+                    collectButton.gameObject.SetActive(true);
+                    collect2XButton.gameObject.SetActive(true);
+                    //winCoinText.text = "+" + CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.lobbyAmount * 4;
+                }
 
                 rankText.text = "1";
 

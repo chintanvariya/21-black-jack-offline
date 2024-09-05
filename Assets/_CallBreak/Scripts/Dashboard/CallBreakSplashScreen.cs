@@ -14,9 +14,9 @@ namespace FGSOfflineCallBreak
         {
             //yield return new WaitForSeconds(1f);
 
-            slider.DOFillAmount(1f, 5).SetEase(Ease.InOutCirc);
+            slider.DOFillAmount(.98f, 5).SetEase(Ease.InOutCirc);
             CallBreakCardAnimation.isSplashShow = false;
-            var loadingAnimation = percentageText.DOText("100%", 5f).SetEase(Ease.InOutCirc).OnComplete(() =>
+            var loadingAnimation = percentageText.DOText("98%", 5f).SetEase(Ease.InOutCirc).OnComplete(() =>
             {
                 OnCompletedAnimation();
             });

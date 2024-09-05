@@ -10,12 +10,26 @@ namespace BlackJackOffline
         [SerializeField]
         private List<Sprite> cardSprites;
 
-        public List<Sprite> randomBoradCard = new List<Sprite>();
+        //public List<Sprite> randomBoradCard = new List<Sprite>();
+        public List<Sprite> totalBoradCard = new List<Sprite>();
         //List<Sprite> cards = new List<Sprite>();
+        private void Awake()
+        {
+            //CreateTotalCard();
+        }
+
+        public void CreateTotalCard()
+        {
+            Debug.Log("BlackJackCardGenerator || CreateTotalCard");
+            for (int i = 0; i < 6; i++)
+                totalBoradCard.AddRange(cardSprites);
+
+            totalBoradCard = totalBoradCard.OrderBy(a => Guid.NewGuid()).ToList();
+        }
 
         internal void SetRendomCard()
         {
-            randomBoradCard = new List<Sprite>(cardSprites);
+            //randomBoradCard = new List<Sprite>(cardSprites);
             //if (rendomBoradCard.Count > 0)
             //{
             //    rendomBoradCard.Clear();
@@ -30,7 +44,7 @@ namespace BlackJackOffline
             //    rendomBoradCard.Add(cards[rendomIndex]);
             //    cards.RemoveAt(rendomIndex);
             //}
-            randomBoradCard = randomBoradCard.OrderBy(a => Guid.NewGuid()).ToList();
+            //randomBoradCard = randomBoradCard.OrderBy(a => Guid.NewGuid()).ToList();
         }
     }
 }
