@@ -1,5 +1,7 @@
 using DanielLochner.Assets.SimpleScrollSnap;
 using DG.Tweening;
+using FGSOfflineCallBreak;
+using GoogleMobileAds.Api;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,11 +32,11 @@ namespace BlackJackOffline
     }
     public class BlackJackGameManager : MonoBehaviour
     {
-        public UserDetails userDetails;
+        //public UserDetails userDetails;
 
-        public float minValue;
-        public float maxValue;
-        public string lobbyName;
+        //public float minValue;
+        //public float maxValue;
+        //public string lobbyName;
 
         public static BlackJackGameManager instance;
         [Header("--------------------- Game Default Values --------------------- ")]
@@ -93,14 +95,21 @@ namespace BlackJackOffline
         // Start is called before the first frame update
         void Start()
         {
-            UpdateUserInfo();
             //foreach (var lobby in blackJackLobbies)
             //{
             //    lobby.LobbyJoinButton.onClick.AddListener(() => LobbyJoinClicked(lobby));
             //}
+            //ScreenChange("GamePlay");
+            //dealer.StartNewRound(false);
+        }
+
+        public void StartGamePlay()
+        {
             ScreenChange("GamePlay");
             dealer.StartNewRound(false);
+            UpdateUserInfo();
         }
+
 
         //private void LobbyJoinClicked(BlackJackLobby lobby)
         //{
@@ -255,12 +264,61 @@ namespace BlackJackOffline
 
         public void RateUs() => Application.OpenURL("https://play.google.com/store/apps/developer?id=Finix+Games+Studio");
 
+        private void OnEnable()
+        {
+            GoogleMobileAds.Sample.InterstitialAdController.OnInterstitialAdFullScreenContentClosed += OnAdFullScreenContentClosedHandler;
+            GoogleMobileAds.Sample.InterstitialAdController.OnInterstitialAdFullScreenContentFailed += OnAdFullScreenContentFailed;
+            GoogleMobileAds.Sample.InterstitialAdController.OnInterstitialAdNotReady += OnInterstitialAdNotReady;
+        }
+
+        private void OnDisable()
+        {
+            GoogleMobileAds.Sample.InterstitialAdController.OnInterstitialAdFullScreenContentClosed -= OnAdFullScreenContentClosedHandler;
+            GoogleMobileAds.Sample.InterstitialAdController.OnInterstitialAdFullScreenContentFailed -= OnAdFullScreenContentFailed;
+            GoogleMobileAds.Sample.InterstitialAdController.OnInterstitialAdNotReady -= OnInterstitialAdNotReady;
+        }
+
+        public void OnInterstitialAdNotReady()
+        {
+            CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
+            dealer.StopAllCoroutines();
+            foreach (var screen in gameScreens)
+                screen.SetActive(false);
+            CallBreakUIManager.Instance.dashboardController.OpenScreen();
+        }
+
+        public void OnAdFullScreenContentFailed(AdError error)
+        {
+            CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
+            dealer.StopAllCoroutines();
+            foreach (var screen in gameScreens)
+                screen.SetActive(false);
+            CallBreakUIManager.Instance.dashboardController.OpenScreen();
+        }
+
+        private void OnAdFullScreenContentClosedHandler()
+        {
+            CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
+            dealer.StopAllCoroutines();
+            foreach (var screen in gameScreens)
+                screen.SetActive(false);
+            CallBreakUIManager.Instance.dashboardController.OpenScreen();
+        }
+
         public void OnButtonClickedLeavePopUp(string buttonName)
         {
             switch (buttonName)
             {
                 case "Yes":
+                    leavePopUp.SetActive(false);
                     //dealer.StopAllCoroutines();
+                    if (CallBreakConstants.callBreakRemoteConfig.adsDetails.isShowInterstitialAdsOnLobby)
+                    {
+                        CallBreakUIManager.Instance.preLoaderController.OpenPreloader();
+                        GoogleMobileAds.Sample.InterstitialAdController.ShowInterstitialAd();
+                    }
+                    else
+                        OnAdFullScreenContentClosedHandler();
 
                     break;
                 case "No":

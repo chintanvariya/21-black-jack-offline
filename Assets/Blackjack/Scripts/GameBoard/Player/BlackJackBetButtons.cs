@@ -1,4 +1,5 @@
 using DG.Tweening;
+using FGSOfflineCallBreak;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -71,11 +72,11 @@ namespace BlackJackOffline
         {
             player.waitForNextRound.gameObject.SetActive(false);
             PlaceBetButtonAction(true);
-            minBetText.text = BlackJackGameManager.instance.SetBalanceFormat(BlackJackGameManager.instance.minValue);
-            maxBetText.text = BlackJackGameManager.instance.SetBalanceFormat(BlackJackGameManager.instance.maxValue);
-            minButton.interactable = player.isCraditAvalible(BlackJackGameManager.instance.minValue);
-            betButton.interactable = player.isCraditAvalible(BlackJackGameManager.instance.minValue);
-            maxButton.interactable = player.isCraditAvalible(BlackJackGameManager.instance.maxValue);
+            minBetText.text = BlackJackGameManager.instance.SetBalanceFormat(CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount);
+            maxBetText.text = BlackJackGameManager.instance.SetBalanceFormat(CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount);
+            minButton.interactable = player.isCraditAvalible(CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount);
+            betButton.interactable = player.isCraditAvalible(CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount);
+            maxButton.interactable = player.isCraditAvalible(CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount);
             if (lastBet != 0)
             {
                 reBetButton.interactable = player.isCraditAvalible(lastBet);
@@ -106,7 +107,7 @@ namespace BlackJackOffline
         {
             PlaceBetButtonAction(false);
             MoveSide(downPosition);
-            float placeAmount = BlackJackGameManager.instance.minValue;
+            float placeAmount = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount;
             player.AddBet(placeAmount);
             lastBet = placeAmount;
             confirmButtonObject.gameObject.SetActive(false);
@@ -116,7 +117,7 @@ namespace BlackJackOffline
         {
             PlaceBetButtonAction(false);
             MoveSide(downPosition);
-            float placeAmount = BlackJackGameManager.instance.maxValue;
+            float placeAmount = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount;
             player.AddBet(placeAmount);
             lastBet = placeAmount;
             confirmButtonObject.gameObject.SetActive(false);
@@ -135,9 +136,9 @@ namespace BlackJackOffline
         {
             partValue.Clear();
 
-            creditPointTxt.text = BlackJackGameManager.instance.SetBalanceFormat(BlackJackGameManager.instance.userDetails.userChips);
-            minValue = BlackJackGameManager.instance.minValue;
-            diffValue = BlackJackGameManager.instance.maxValue - BlackJackGameManager.instance.minValue;
+            creditPointTxt.text = BlackJackGameManager.instance.SetBalanceFormat(CallBreakGameManager.instance.selfUserDetails.userChips);
+            minValue = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount;
+            diffValue = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount - CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount;
             float diffAount = diffValue / 6;
             betsTexts[0].text = BlackJackGameManager.instance.SetBalanceFormat(minValue);
             partValue.Add(BlackJackGameManager.instance.SetRoundFormat(minValue));
@@ -152,7 +153,7 @@ namespace BlackJackOffline
             lastValue = 0;
             selectAmount = minValue;
             SliderText.text = BlackJackGameManager.instance.SetBalanceFormat(minValue);
-            float credite = BlackJackGameManager.instance.userDetails.userChips - minValue;
+            float credite = CallBreakGameManager.instance.selfUserDetails.userChips - minValue;
             maxScrollLimit = credite / diffValue;
 
 
@@ -165,7 +166,7 @@ namespace BlackJackOffline
             fillBar.fillAmount = value;
             if (maxScrollLimit > value)
             {
-                if (BlackJackGameManager.instance.userDetails.userChips > selectAmount)
+                if (CallBreakGameManager.instance.selfUserDetails.userChips > selectAmount)
                 {
                     selectAmount = (diffValue * value) + minValue;
                     lastValue = value;
@@ -174,7 +175,7 @@ namespace BlackJackOffline
                 {
                     if (lastValue <= value)
                     {
-                        selectAmount = BlackJackGameManager.instance.userDetails.userChips;
+                        selectAmount = CallBreakGameManager.instance.selfUserDetails.userChips;
                         scrollbar.value = lastValue;
                         fillBar.fillAmount = lastValue;
                     }
@@ -186,7 +187,7 @@ namespace BlackJackOffline
             }
             if (maxScrollLimit <= value)
             {
-                selectAmount = BlackJackGameManager.instance.userDetails.userChips;
+                selectAmount = CallBreakGameManager.instance.selfUserDetails.userChips;
                 scrollbar.value = maxScrollLimit;
                 fillBar.fillAmount = maxScrollLimit;
                 lastValue = maxScrollLimit;
@@ -239,7 +240,7 @@ namespace BlackJackOffline
             float placeAmount = 0;
             if (!player.isCraditAvalible(selectAmount))
             {
-                placeAmount = BlackJackGameManager.instance.SetRoundFormat(BlackJackGameManager.instance.userDetails.userChips);
+                placeAmount = BlackJackGameManager.instance.SetRoundFormat(CallBreakGameManager.instance.selfUserDetails.userChips);
             }
             else
             {

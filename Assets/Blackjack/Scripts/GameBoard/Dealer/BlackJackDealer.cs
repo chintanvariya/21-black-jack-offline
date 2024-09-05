@@ -1,4 +1,5 @@
 using DG.Tweening;
+using FGSOfflineCallBreak;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -76,11 +77,11 @@ namespace BlackJackOffline
         {
             if (!isNextRound)
             {
-                boradManager.LoadNewLobbyData(gameManager.minValue, gameManager.maxValue, gameManager.lobbyName);
+                boradManager.LoadNewLobbyData(CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount, CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount, CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.lobbyTypeName.text);
             }
             else
             {
-                if (gameManager.userDetails.userChips < gameManager.minValue)
+                if (CallBreakGameManager.instance.selfUserDetails.userChips < CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount)
                 {
                     //int newLobbyIndex = 100;
                     //newLobbyIndex = gameManager.blackJackLobbies.FindIndex(x => x.minAmount <= BlackJackDataManager.creditPoint);
@@ -105,7 +106,7 @@ namespace BlackJackOffline
                     //    BlackJackDataManager.lobbyIndex = item.lobbyIndex;
                     //    boradManager.LoadNewLobbyData(BlackJackDataManager.lobbyMinValue, BlackJackDataManager.lobbyMaxValue, BlackJackDataManager.lobbyName);
                     //}
-                    boradManager.LoadNewLobbyData(gameManager.minValue, gameManager.maxValue, gameManager.lobbyName);
+                    boradManager.LoadNewLobbyData(CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount, CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount, CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.lobbyTypeName.text);
                 }
             }
             gameManager.pooler.ResetAtNewRoundStart();
@@ -682,12 +683,12 @@ namespace BlackJackOffline
             {
                 if (isWin)
                 {
-                    gameManager.userDetails.userGameDetails.GameWon++;
+                    CallBreakGameManager.instance.selfUserDetails.userGameDetails.GameWon++;
                 }
                 else
                 {
 
-                    gameManager.userDetails.userGameDetails.GameLoss++;
+                    CallBreakGameManager.instance.selfUserDetails.userGameDetails.GameLoss++;
                 }
             }
         }

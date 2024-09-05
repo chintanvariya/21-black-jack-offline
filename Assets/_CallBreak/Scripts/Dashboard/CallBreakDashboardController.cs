@@ -398,7 +398,7 @@ namespace FGSOfflineCallBreak
             else
             {
                 CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
-
+                BlackJackOffline.BlackJackGameManager.instance.StartGamePlay();
                 profileUiController.CloseScreen();
                 CloseScreen();
             }
@@ -407,6 +407,7 @@ namespace FGSOfflineCallBreak
         public void OnRewardedAdFullScreenContentFailed(AdError error)
         {
             CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
+            BlackJackOffline.BlackJackGameManager.instance.StartGamePlay();
         }
 
         public void OnRewardedAdGranted()
