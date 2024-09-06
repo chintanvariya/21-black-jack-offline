@@ -274,7 +274,7 @@ namespace FGSOfflineCallBreak
             {
                 int selfUserRank = arrageUserInOrderToFinalHighScore.Select((player, index) => new { Player = player, Index = index }).FirstOrDefault(item => item.Player.isSelfPlayer)?.Index + 1 ?? 0;
 
-                CallBreakUIManager.Instance.winnerLoserController.OpenWinnerAndLosserScreen(arrageUserInOrderToFinalHighScore[0].isSelfPlayer, selfUserRank);
+
 
                 currentRound = 1;
             }
@@ -284,7 +284,7 @@ namespace FGSOfflineCallBreak
                 for (int i = 0; i < gamePlayController.allPlayer.Count; i++)
                     gamePlayController.allPlayer[i].ResetPlayerData();
 
-                CallBreakUIManager.Instance.scoreBoardController.OpenScreen(arrageUserInOrderToRoundHighScore[0].staticSeatIndex);
+
             }
         }
 

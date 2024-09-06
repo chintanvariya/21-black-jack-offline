@@ -37,9 +37,7 @@ namespace FGSOfflineCallBreak
         public CallBreakItemPurchase itemPurchase;
         public CallBreakGamePlayController gamePlayController;
         public CallBreakProfileSelectionController profileSelectionController;
-        public CallBreakScoreBoardController scoreBoardController;
-        public CallBreakBidSelectionController bidSelectionController;
-        public CallBreakWinnerLoserController winnerLoserController;
+
         public CallBreakDailyRewardManager dailyRewardManager;
         public CallBreakMenuController menuController;
         public CallBreakExitController exitController;

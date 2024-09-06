@@ -45,8 +45,6 @@ namespace FGSOfflineCallBreak
             for (int i = 0; i < CallBreakUIManager.Instance.gamePlayController.allPlayer.Count; i++)
                 CallBreakUIManager.Instance.gamePlayController.allPlayer[i].ResetPlayerData();
 
-            CallBreakUIManager.Instance.bidSelectionController.CloseScreen();
-            CallBreakUIManager.Instance.scoreBoardController.CloseScreen();
 
             StopCoroutine(setAndStartGamePlay);
             StopCoroutine(cardDistributeAnimation);
@@ -80,7 +78,6 @@ namespace FGSOfflineCallBreak
 
             gamePlayController.allPlayer[CallBreakGameManager.currentPlayerIndex].dealerIcon.SetActive(true);
 
-            CallBreakUIManager.Instance.scoreBoardController.CloseScreen();
 
             CardPositionSet.instance.height = 60;
             CardPositionSet.instance.width = 800;
@@ -230,7 +227,6 @@ namespace FGSOfflineCallBreak
                     gamePlayController.allPlayer[i].BidToolTipAnimation();
             }
 
-            CallBreakUIManager.Instance.bidSelectionController.OpenScreen();
         }
 
         internal void CardRaycast(bool isActive)

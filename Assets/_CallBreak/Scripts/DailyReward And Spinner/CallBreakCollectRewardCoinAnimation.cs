@@ -109,8 +109,7 @@ namespace FGSOfflineCallBreak
                         CallBreakUIManager.Instance.collectRewardController.OnButtonClicked("Close");
                         break;
                     case "WinnerLoser":
-                        rewardOfCoin = CallBreakUIManager.Instance.winnerLoserController.rewardedCoins;
-                        CallBreakUIManager.Instance.winnerLoserController.OnButtonClicked("Close");
+
                         break;
                     case "100Coins":
                         rewardOfCoin = 100;

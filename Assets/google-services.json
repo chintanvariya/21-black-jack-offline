@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "248418748706",
-    "project_id": "call-break-offline-de029",
-    "storage_bucket": "call-break-offline-de029.appspot.com"
+    "project_number": "290049299784",
+    "project_id": "black-jack-589ac",
+    "storage_bucket": "black-jack-589ac.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:248418748706:android:fd3472bdc92b301eab3d7b",
+        "mobilesdk_app_id": "1:290049299784:android:a3ea680df003f9101a8f7d",
         "android_client_info": {
-          "package_name": "com.finixgamestudio.CallBreakOffline"
+          "package_name": "com.finixgamestudio.blackjack21"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAenMxMr-6rpGonkuMi5fORFzd4dEVCG10"
+          "current_key": "AIzaSyC6gbyYliUVEDaRq3aZqU4Penr4yc-TKDI"
         }
       ],
       "services": {
