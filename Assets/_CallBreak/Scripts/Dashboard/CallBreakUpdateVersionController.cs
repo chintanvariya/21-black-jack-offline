@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakUpdateVersionController : MonoBehaviour
     {

@@ -4,9 +4,9 @@ using DG.Tweening;
 using DG.Tweening.Core.Easing;
 using Newtonsoft.Json;
 using UnityEngine;
-using static FGSOfflineCallBreak.EmojiRequestResponseClass;
+using static FGSBlackJack.EmojiRequestResponseClass;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class EmojiRequestResponseClass
     {
@@ -70,8 +70,8 @@ namespace FGSOfflineCallBreak
         {
             this.gameObject.SetActive(true);
             root.transform.position = targetPosition.position;
-            CallBreakUserController fromHomeController = CallBreakUIManager.Instance.gamePlayController.allPlayer.Find(player => player.staticSeatIndex == from);
-            CallBreakUserController toHomeController = CallBreakUIManager.Instance.gamePlayController.allPlayer.Find(player => player.staticSeatIndex == to);
+            BlackJackPlayer fromHomeController = CallBreakUIManager.Instance.gameBoardManager.players.Find(player => player.staticSeatIndex == from);
+            BlackJackPlayer toHomeController = CallBreakUIManager.Instance.gameBoardManager.players.Find(player => player.staticSeatIndex == to);
 
             CallBreakEmojiUiController emojiUiController = Instantiate(allEmojies[emojiIndex], transform);
             emojiUiController.AnimationOnUserProfile(fromHomeController.emojiTransform, toHomeController.emojiTransform);

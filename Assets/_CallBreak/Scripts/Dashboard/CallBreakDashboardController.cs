@@ -7,7 +7,7 @@ using GoogleMobileAds.Api;
 using System;
 using UnityEditor;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public enum LobbyType { Rookie, Newbie, Experienced, Gifted }
     public class CallBreakDashboardController : MonoBehaviour
@@ -42,7 +42,6 @@ namespace FGSOfflineCallBreak
 
         [Header("ALL LOBBIES")]
         public List<CallBreakLobbyUiController> allLobbies;
-        public List<int> allLobbyAmount = new List<int>();
         public List<Sprite> practiesAndCoins;
 
         public Sprite freeLobbyBg;
@@ -59,8 +58,8 @@ namespace FGSOfflineCallBreak
             {
                 //CallBreakConstants.callBreakRemoteConfig = new CallBreakRemoteConfigClass.CallBreakRemoteConfig();
                 this.enabled = true;
-                CallBreakGameManager.instance.selfUserDetails.userId = SystemInfo.deviceUniqueIdentifier.Substring(0, 8);
-                userIDText.text = "User ID : " + CallBreakGameManager.instance.selfUserDetails.userId;
+                BlackJackGameManager.instance.selfUserDetails.userId = SystemInfo.deviceUniqueIdentifier.Substring(0, 8);
+                userIDText.text = "User ID : " + BlackJackGameManager.instance.selfUserDetails.userId;
 
                 profileUiController.OpenScreen();
 
@@ -69,51 +68,42 @@ namespace FGSOfflineCallBreak
 
                 allIcons[2].transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
-                allLobbyAmount = new List<int>();
-                //if (CallBreakConstants.callBreakRemoteConfig.flagDetails.isSuccess)
-                //{
-                //    allLobbyAmount = CallBreakConstants.callBreakRemoteConfig.levelDetails.allLobbyAmount;
-                //    CallBreakConstants.coinsToClearLevel = CallBreakConstants.callBreakRemoteConfig.levelDetails.coinsToClearLevel;
-                //}
-                //else
+                if (CallBreakConstants.callBreakRemoteConfig.flagDetails.isSuccess)
                 {
-                    List<int> lobbyValue1 = new List<int> { 0, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 };
-                    allLobbyAmount = new List<int>(lobbyValue1);
-                    int lobby = 1000;
-                    for (int i = 0; i < 39; i++)
-                    {
-                        allLobbyAmount.Add(lobby);
-                        lobby += 500;
-                    }
+                    BlackJackGameManager.instance.allLobbyDetails = CallBreakConstants.callBreakRemoteConfig.allLobbyDetails;
+                }
+                else
+                {
+
                 }
 
                 Debug.Log("===============>" + allLobbies.Count);
                 if (allLobbies.Count == 0)
                 {
-                    for (int i = 0; i < CallBreakGameManager.instance.lobbyDetails.allLobbyDetails.Count; i++)
+                    for (int i = 0; i < BlackJackGameManager.instance.allLobbyDetails.Count; i++)
                     {
                         CallBreakLobbyTypeUi lobbyTypeUi = Instantiate(prefabLobbyTypeUi, parentOfLobbyType);
 
-                        lobbyTypeUi.UpdateLobbyTypeText(CallBreakGameManager.instance.lobbyDetails.allLobbyDetails[i].countryName);
+                        lobbyTypeUi.UpdateLobbyTypeText(BlackJackGameManager.instance.allLobbyDetails[i].countryName);
                         lobbyTypeUi.staticIndex = i;
                         lobbyTypeUi.dashboardController = this;
 
                         allLevelTypes.Add(lobbyTypeUi);
-                        for (int j = 0; j < CallBreakGameManager.instance.lobbyDetails.allLobbyDetails[i].countryLevel.Count; j++)
+                        for (int j = 0; j < BlackJackGameManager.instance.allLobbyDetails[i].countryLevel.Count; j++)
                         {
                             CallBreakLobbyUiController cloneOfLobby = Instantiate(lobbyPrefab, parentOfLobby);
                             cloneOfLobby.dashboardController = this;
 
                             Sprite BG = (i % 2 == 0) ? freeLobbyBg : coinLoobyBG;
 
-                            string min = CallBreakUtilities.AbbreviateNumber(CallBreakGameManager.instance.lobbyDetails.allLobbyDetails[i].minAmount);
-                            string max = CallBreakUtilities.AbbreviateNumber(CallBreakGameManager.instance.lobbyDetails.allLobbyDetails[i].maxAmount);
-                            string levelName = CallBreakGameManager.instance.lobbyDetails.allLobbyDetails[i].countryLevel[j];
-                            string keys = CallBreakUtilities.AbbreviateNumber(CallBreakGameManager.instance.lobbyDetails.allLobbyDetails[i].minAmount / 8);
+                            string min = CallBreakUtilities.AbbreviateNumber(BlackJackGameManager.instance.allLobbyDetails[i].minAmount);
+                            string max = CallBreakUtilities.AbbreviateNumber(BlackJackGameManager.instance.allLobbyDetails[i].maxAmount);
+                            string levelName = BlackJackGameManager.instance.allLobbyDetails[i].countryLevel[j];
+                            string keys = CallBreakUtilities.AbbreviateNumber(BlackJackGameManager.instance.allLobbyDetails[i].minAmount / 8);
                             //Debug.Log($"<color><b>LEVEL NAME => <color=green><b>{levelName} </b></color> || MIN => {min} || MAX => {max} </b></color>");
 
-                            cloneOfLobby.minimumTableAmount = CallBreakGameManager.instance.lobbyDetails.allLobbyDetails[i].minAmount;
-                            cloneOfLobby.maximumTableAmount = CallBreakGameManager.instance.lobbyDetails.allLobbyDetails[i].maxAmount;
+                            cloneOfLobby.minimumTableAmount = BlackJackGameManager.instance.allLobbyDetails[i].minAmount;
+                            cloneOfLobby.maximumTableAmount = BlackJackGameManager.instance.allLobbyDetails[i].maxAmount;
 
                             cloneOfLobby.UpdateLobbyText(BG, levelName, min, max, keys);
                             allLobbies.Add(cloneOfLobby);
@@ -127,7 +117,7 @@ namespace FGSOfflineCallBreak
                 for (int i = 0; i < allLevelTypes.Count; i++)
                     allLevelTypes[i].lobbyButton.interactable = false;
 
-                for (int i = 0; i < CallBreakGameManager.instance.selfUserDetails.level; i++)
+                for (int i = 0; i < BlackJackGameManager.instance.selfUserDetails.level; i++)
                     allLevelTypes[i].lobbyButton.interactable = true;
 
                 gameObject.SetActive(true);
@@ -138,40 +128,6 @@ namespace FGSOfflineCallBreak
                 throw;
             }
         }
-
-        public void RoundSectionActivate(bool isActive)
-        {
-            foreach (var item in quickRoundObj)
-            {
-                item.SetActive(isActive);
-            }
-        }
-        public void RoundBtnClick(int roundNumber)
-        {
-            RoundInfoObj(false);
-            CallBreakSoundManager.PlaySoundEvent(SoundEffects.Click);
-            string roundText = string.Empty;
-            if (roundNumber == DefaultRound)
-            {
-                standardModeBtn.sprite = modeSelectBG;
-                quickModeBtn.sprite = normalBG;
-                RoundSectionActivate(true);
-                roundText = "Standard";
-            }
-            else
-            {
-                quickModeBtn.sprite = modeSelectBG;
-                standardModeBtn.sprite = normalBG;
-                RoundSectionActivate(false);
-                roundText = "Quick";
-            }
-            CallBreakGameManager.instance.totalRound = roundNumber;
-
-            //foreach (var item in allLobbies)
-            //    item.UpdateRoundText(roundText);
-        }
-
-
 
         public void OnButtonClicked(int buttonIndex)
         {
@@ -209,63 +165,6 @@ namespace FGSOfflineCallBreak
                     break;
             }
         }
-
-        public void InfoBtn(string roundState)
-        {
-            RoundInfoObj(true);
-
-            if (roundState == "Standard")
-            {
-                roundInfoToolTip.GetComponent<RectTransform>().anchoredPosition = new Vector2(-175, -125);
-                roundInfoToolTip.GetComponentInChildren<TextMeshProUGUI>().text = CallBreakConstants.StandardRoundInfoDes;
-            }
-            else
-            {
-                roundInfoToolTip.GetComponent<RectTransform>().anchoredPosition = new Vector2(115, -125);
-                roundInfoToolTip.GetComponentInChildren<TextMeshProUGUI>().text = CallBreakConstants.QuickRoundInfoDes;
-            }
-        }
-
-        public void RoundInfoObj(bool isActive)
-        {
-            roundInfoToolTip.SetActive(isActive);
-        }
-
-
-        public void UpdateTheLobbiesDetails()
-        {
-            for (int i = 0; i < allLobbies.Count; i++)
-            {
-                int lobbyAmount = allLobbyAmount[0];
-                string keys = string.Empty;
-                string round = "Standard";
-                string playButton = string.Empty;
-                string winAmount = string.Empty;
-
-                Sprite practicesAndCoin;
-                if (i == 0)
-                {
-                    keys = "Practice";
-                    playButton = "Play";
-                    winAmount = $"Free";
-                    practicesAndCoin = practiesAndCoins[0];
-                    //allLobbies[i].bg.sprite = freeLobbyBg;
-                }
-                else
-                {
-                    lobbyAmount = allLobbyAmount[i];
-                    keys = $"+{CallBreakUtilities.AbbreviateNumber(lobbyAmount / 2)}";
-                    practicesAndCoin = practiesAndCoins[1];
-                    playButton = $"Play {CallBreakUtilities.AbbreviateNumber(lobbyAmount)}";
-                    winAmount = $"{CallBreakUtilities.AbbreviateNumber(lobbyAmount * 4)}";
-                    //allLobbies[i].bg.sprite = coinLoobyBG;
-                }
-                //allLobbies[i].UpdateLobbyText(practicesAndCoin, lobbyAmount, keys, round, playButton, winAmount);
-            }
-
-            gameObject.SetActive(true);
-        }
-
 
 
         public void SelectedLobbyType(CallBreakLobbyTypeUi lobbyType)
@@ -389,7 +288,7 @@ namespace FGSOfflineCallBreak
 
         private void OnAdFullScreenContentClosedHandler()
         {
-            if (CallBreakGameManager.instance.selfUserDetails.userChips < currentLobbyPlay.minimumTableAmount)
+            if (BlackJackGameManager.instance.selfUserDetails.userChips < currentLobbyPlay.minimumTableAmount)
             {
                 CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
                 CloseScreen();
@@ -398,7 +297,7 @@ namespace FGSOfflineCallBreak
             else
             {
                 CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
-                BlackJackOffline.BlackJackGameManager.instance.StartGamePlay();
+                BlackJackGameManager.instance.StartGamePlay();
                 profileUiController.CloseScreen();
                 CloseScreen();
             }
@@ -407,7 +306,7 @@ namespace FGSOfflineCallBreak
         public void OnRewardedAdFullScreenContentFailed(AdError error)
         {
             CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
-            BlackJackOffline.BlackJackGameManager.instance.StartGamePlay();
+            FGSBlackJack.BlackJackGameManager.instance.StartGamePlay();
         }
 
         public void OnRewardedAdGranted()

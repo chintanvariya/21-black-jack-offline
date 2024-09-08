@@ -1,5 +1,5 @@
 using DG.Tweening;
-using FGSOfflineCallBreak;
+using FGSBlackJack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,10 +7,17 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BlackJackOffline
+namespace FGSBlackJack
 {
     public class BlackJackPlayer : MonoBehaviour
     {
+        [Space]
+        [Header("- Static Seat Index -")]
+        public int staticSeatIndex;
+        [Space]
+        [Header("- Emoji Transform -")]
+        public Transform emojiTransform;
+        [Space]
         [Header("--------------------- Player Info --------------------- ")]
         [SerializeField]
         internal bool isBot;
@@ -18,8 +25,7 @@ namespace BlackJackOffline
         internal TMP_Text userNameTxt;
         [SerializeField]
         internal Image userImage;
-        [SerializeField]
-        internal List<Sprite> avatarSprites;
+
         [SerializeField]
         internal TMP_Text userCreditPointTxt;
         [SerializeField]
@@ -32,6 +38,10 @@ namespace BlackJackOffline
         Coroutine waitToast;
 
         public int leftRoundCounter;
+
+
+
+
         internal void WaitForNextRound()
         {
             waitForNextRound.SetActive(false);
@@ -53,19 +63,16 @@ namespace BlackJackOffline
         {
             if (!isBot)
             {
-                userNameTxt.text = CallBreakGameManager.instance.selfUserDetails.userName;
-                userCreditPointTxt.text = BlackJackGameManager.instance.SetBalanceFormat(CallBreakGameManager.instance.selfUserDetails.userChips);
-                userImage.sprite = avatarSprites[CallBreakGameManager.instance.selfUserDetails.userAvatarIndex];
+                userNameTxt.text = BlackJackGameManager.instance.selfUserDetails.userName;
+                userCreditPointTxt.text = BlackJackGameManager.instance.SetBalanceFormat(BlackJackGameManager.instance.selfUserDetails.userChips);
+                userImage.sprite = BlackJackGameManager.instance.allProfileSprite[BlackJackGameManager.instance.selfUserDetails.userAvatarIndex];
             }
             else
             {
                 botCraditPoints = Mathf.Round(CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount * UnityEngine.Random.Range(0, 4));
-
-                userNameTxt.text = BlackJackGameManager.instance.botsName[UnityEngine.Random.Range(0, BlackJackGameManager.instance.botsName.Count)];
-
+                userNameTxt.text = CallBreakConstants.BotNames[UnityEngine.Random.Range(0, CallBreakConstants.BotNames.Count)];
                 userCreditPointTxt.text = BlackJackGameManager.instance.SetBalanceFormat(botCraditPoints);
-
-                userImage.sprite = avatarSprites[UnityEngine.Random.Range(1, avatarSprites.Count)];
+                userImage.sprite = BlackJackGameManager.instance.allBotSprite[UnityEngine.Random.Range(0, BlackJackGameManager.instance.allBotSprite.Count)];
             }
         }
 
@@ -77,7 +84,12 @@ namespace BlackJackOffline
             if (!isBot)
             {
                 // Player Place Bet
-                BlackJackGameManager.instance.betButtons.LoadNewRoundData();
+                if (BlackJackGameManager.instance.selfUserDetails.userChips <= CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount)
+                {
+                    BlackJackGameManager.instance.LeaveGame();
+                }
+                else
+                    BlackJackGameManager.instance.betButtons.LoadNewRoundData();
             }
             else
             {
@@ -111,8 +123,8 @@ namespace BlackJackOffline
             {
                 Debug.Log("UpdateCreditPoints => " + Amount);
                 // Player Credit Points
-                CallBreakGameManager.instance.selfUserDetails.userChips += Amount;
-                userCreditPointTxt.text = BlackJackGameManager.instance.SetBalanceFormat(CallBreakGameManager.instance.selfUserDetails.userChips);
+                BlackJackGameManager.instance.selfUserDetails.userChips += Amount;
+                userCreditPointTxt.text = BlackJackGameManager.instance.SetBalanceFormat(BlackJackGameManager.instance.selfUserDetails.userChips);
             }
             else
             {
@@ -155,7 +167,7 @@ namespace BlackJackOffline
                     StopTimer();
                     if (!isBot)
                     {
-                        CallBreakGameManager.instance.selfUserDetails.userGameDetails.GamePlayed++;
+                        BlackJackGameManager.instance.selfUserDetails.userGameDetails.GamePlayed++;
                     }
                 }
             }
@@ -422,9 +434,9 @@ namespace BlackJackOffline
                 {
                     //leftRoundCounter = 0;
                     botCraditPoints = Mathf.Round(CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount * UnityEngine.Random.Range(0, 4));
-                    userNameTxt.text = BlackJackGameManager.instance.botsName[UnityEngine.Random.Range(0, BlackJackGameManager.instance.botsName.Count)];
+                    userNameTxt.text = CallBreakConstants.BotNames[UnityEngine.Random.Range(0, CallBreakConstants.BotNames.Count)];
                     userCreditPointTxt.text = BlackJackGameManager.instance.SetBalanceFormat(botCraditPoints);
-                    userImage.sprite = avatarSprites[UnityEngine.Random.Range(1, avatarSprites.Count)];
+                    userImage.sprite = BlackJackGameManager.instance.allBotSprite[UnityEngine.Random.Range(0, BlackJackGameManager.instance.allBotSprite.Count)];
 
 
                     yield return new WaitForSeconds(placeBetdelay);
@@ -473,7 +485,7 @@ namespace BlackJackOffline
         {
             if (!isBot)
             {
-                if (CallBreakGameManager.instance.selfUserDetails.userChips >= amount)
+                if (BlackJackGameManager.instance.selfUserDetails.userChips >= amount)
                 {
                     return true;
                 }

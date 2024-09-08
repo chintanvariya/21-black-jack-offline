@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakDailyRewardManager : MonoBehaviour
     {
@@ -126,9 +126,9 @@ namespace FGSOfflineCallBreak
                 return;
             }
 
-            CallBreakGameManager.instance.selfUserDetails.userChips += sevenDaysCoinsReward[currentDay];
-            CallBreakGameManager.instance.selfUserDetails.userKeys += sevenDaysKeysReward[currentDay];
-            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
+            BlackJackGameManager.instance.selfUserDetails.userChips += sevenDaysCoinsReward[currentDay];
+            BlackJackGameManager.instance.selfUserDetails.userKeys += sevenDaysKeysReward[currentDay];
+            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(BlackJackGameManager.instance.selfUserDetails);
             CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserChips();
             CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserKeys();
 

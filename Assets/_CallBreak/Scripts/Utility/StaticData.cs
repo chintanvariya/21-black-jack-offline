@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public static class StaticData
     {

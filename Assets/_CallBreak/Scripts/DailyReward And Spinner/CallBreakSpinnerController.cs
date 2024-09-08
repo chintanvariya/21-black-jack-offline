@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakSpinnerController : MonoBehaviour
     {

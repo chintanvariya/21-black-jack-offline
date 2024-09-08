@@ -6,7 +6,7 @@ using GoogleMobileAds.Api;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakCollectRewardController : MonoBehaviour
     {

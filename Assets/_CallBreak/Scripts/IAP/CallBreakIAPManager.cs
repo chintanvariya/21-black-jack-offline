@@ -6,7 +6,7 @@ using Unity.Services.Core.Environments;
 using UnityEngine.Purchasing.Extension;
 using System.Collections.Generic;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakIAPManager : MonoBehaviour, IStoreListener
     {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakMenuController : MonoBehaviour
     {
@@ -117,14 +117,14 @@ namespace FGSOfflineCallBreak
                     Application.OpenURL("https://finixgamesstudio.com/privacy-policy/");
                     break;
                 case "Quit":
-                    if (CallBreakGameManager.isInGamePlay)
-                    {
-                        CallBreakUIManager.Instance.exitController.OpenScreen("Exit", CallBreakConstants.ExitFromGamePlayMessage);
-                    }
-                    else
-                    {
-                        CallBreakUIManager.Instance.exitController.OpenScreen("Exit", CallBreakConstants.ExitFromDashboardPlayMessage);
-                    }
+                    //if (CallBreakGameManager.isInGamePlay)
+                    //{
+                    //    CallBreakUIManager.Instance.exitController.OpenScreen("Exit", CallBreakConstants.ExitFromGamePlayMessage);
+                    //}
+                    //else
+                    //{
+                    //}
+                    CallBreakUIManager.Instance.exitController.OpenScreen("Exit", CallBreakConstants.ExitFromDashboardPlayMessage);
                     menuRoot.DOScale(Vector3.zero, 0.25f).SetEase(Ease.Linear).OnComplete(() =>
                     {
                         gameObject.SetActive(false);

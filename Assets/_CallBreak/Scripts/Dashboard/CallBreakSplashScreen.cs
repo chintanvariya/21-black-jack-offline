@@ -3,7 +3,7 @@ using UnityEngine;
 using DG.Tweening;
 using System.Collections;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakSplashScreen : MonoBehaviour
     {
@@ -15,7 +15,7 @@ namespace FGSOfflineCallBreak
             //yield return new WaitForSeconds(1f);
 
             slider.DOFillAmount(.98f, 5).SetEase(Ease.InOutCirc);
-            CallBreakCardAnimation.isSplashShow = false;
+           
             var loadingAnimation = percentageText.DOText("98%", 5f).SetEase(Ease.InOutCirc).OnComplete(() =>
             {
                 OnCompletedAnimation();
@@ -40,8 +40,8 @@ namespace FGSOfflineCallBreak
 
         public void LunchOnDashboard()
         {
-            CallBreakGameManager.instance.selfUserDetails = CallBreakUtilities.ReturnUserDetails(CallBreakConstants.UserDetialsJsonString);
-            CallBreakGameManager.profilePicture = CallBreakGameManager.instance.allProfileSprite[CallBreakGameManager.instance.selfUserDetails.userAvatarIndex];
+            BlackJackGameManager.instance.selfUserDetails = CallBreakUtilities.ReturnUserDetails(CallBreakConstants.UserDetialsJsonString);
+            BlackJackGameManager.profilePicture = BlackJackGameManager.instance.allProfileSprite[BlackJackGameManager.instance.selfUserDetails.userAvatarIndex];
             this.gameObject.SetActive(false);
             CallBreakUIManager.Instance.dashboardController.OpenScreen();
         }

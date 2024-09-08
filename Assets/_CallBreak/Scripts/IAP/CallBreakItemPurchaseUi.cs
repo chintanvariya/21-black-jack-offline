@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Purchasing;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakItemPurchaseUi : MonoBehaviour
     {

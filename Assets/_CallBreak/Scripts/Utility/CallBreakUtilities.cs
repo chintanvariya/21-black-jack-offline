@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
+    public enum CardType { Heart , Diamond , Club , Spade }
     public class CallBreakUtilities
     {
         public static int ReturnMyCardValue(string cardTypeValue)

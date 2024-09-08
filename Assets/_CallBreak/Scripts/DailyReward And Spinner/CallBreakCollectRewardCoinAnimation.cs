@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakCollectRewardCoinAnimation : MonoBehaviour
     {
@@ -122,9 +122,9 @@ namespace FGSOfflineCallBreak
                         break;
                 }
 
-                CallBreakGameManager.instance.selfUserDetails.userChips += rewardOfCoin;
-                CallBreakGameManager.instance.selfUserDetails.userKeys += rewardOfKeys;
-                CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
+                BlackJackGameManager.instance.selfUserDetails.userChips += rewardOfCoin;
+                BlackJackGameManager.instance.selfUserDetails.userKeys += rewardOfKeys;
+                CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(BlackJackGameManager.instance.selfUserDetails);
                 CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserChips();
                 CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserKeys();
                 CallBreakUIManager.Instance.dashboardController.OpenScreen();

@@ -3,7 +3,7 @@ using GoogleMobileAds.Api;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public enum AvatarDetails { Free, Coins, Video }
     public class CallBreakProfileSelectionController : MonoBehaviour
@@ -49,7 +49,7 @@ namespace FGSOfflineCallBreak
 
             UpdateTheLabelText();
 
-            FreeAvatarSelected(allProfile[CallBreakGameManager.instance.selfUserDetails.userAvatarIndex]);
+            FreeAvatarSelected(allProfile[BlackJackGameManager.instance.selfUserDetails.userAvatarIndex]);
 
             gameObject.SetActive(true);
         }
@@ -65,7 +65,7 @@ namespace FGSOfflineCallBreak
             {
                 allProfile[i].indexOfAvatar = i;
                 allProfile[i].profileSelectionController = this;
-                allProfile[i].profilePicture.sprite = CallBreakGameManager.instance.allProfileSprite[i];
+                allProfile[i].profilePicture.sprite = BlackJackGameManager.instance.allProfileSprite[i];
                 allProfile[i].buttonLabel.text = "FREE";
 
                 switch (allProfile[i].avatarDetails)
@@ -91,9 +91,9 @@ namespace FGSOfflineCallBreak
 
         public void PurchaseAvatarSelected(CallBreakProfileSelectionUi profileSelectionUi)
         {
-            if (profileSelectionUi.avatarValue <= CallBreakGameManager.instance.selfUserDetails.userChips)
+            if (profileSelectionUi.avatarValue <= BlackJackGameManager.instance.selfUserDetails.userChips)
             {
-                CallBreakGameManager.instance.selfUserDetails.userChips -= profileSelectionUi.avatarValue;
+                BlackJackGameManager.instance.selfUserDetails.userChips -= profileSelectionUi.avatarValue;
                 FreeAvatarSelected(profileSelectionUi);
             }
             else
@@ -116,11 +116,11 @@ namespace FGSOfflineCallBreak
             if (profileSelectionUi.coinImage != null)
                 profileSelectionUi.coinImage.SetActive(false);
 
-            CallBreakGameManager.instance.selfUserDetails.userAvatarIndex = profileSelectionUi.indexOfAvatar;
+            BlackJackGameManager.instance.selfUserDetails.userAvatarIndex = profileSelectionUi.indexOfAvatar;
 
-            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
+            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(BlackJackGameManager.instance.selfUserDetails);
 
-            CallBreakGameManager.profilePicture = CallBreakGameManager.instance.allProfileSprite[CallBreakGameManager.instance.selfUserDetails.userAvatarIndex];
+            BlackJackGameManager.profilePicture = BlackJackGameManager.instance.allProfileSprite[BlackJackGameManager.instance.selfUserDetails.userAvatarIndex];
 
             CallBreakUIManager.Instance.editProfileController.UpdateMyProfilePicture();
             CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateMyProfilePicture();

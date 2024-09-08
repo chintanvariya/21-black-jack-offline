@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BlackJackOffline
+namespace FGSBlackJack
 {
     public class BlackJackGameBoardManager : MonoBehaviour
     {

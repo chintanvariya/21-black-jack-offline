@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
-namespace BlackJackOffline
+namespace FGSBlackJack
 {
     public class BlackJackPooler : MonoBehaviour
     {

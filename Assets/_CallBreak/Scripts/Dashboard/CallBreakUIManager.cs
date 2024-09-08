@@ -5,8 +5,9 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using System.Collections;
+using FGSBlackJack;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public sealed class CallBreakUIManager : MonoBehaviour
     {
@@ -35,7 +36,7 @@ namespace FGSOfflineCallBreak
         public CallBreakNoInternetController noInternetController;
         public CallBreakEditProfileController editProfileController;
         public CallBreakItemPurchase itemPurchase;
-        public CallBreakGamePlayController gamePlayController;
+        public BlackJackGameBoardManager gameBoardManager;
         public CallBreakProfileSelectionController profileSelectionController;
 
         public CallBreakDailyRewardManager dailyRewardManager;
@@ -45,7 +46,7 @@ namespace FGSOfflineCallBreak
         public CallBreakSpinnerController spinnerController;
         public CallBreakNotEnoughCoinsController notEnoughCoinsController;
         public CallBreakHowToPlay howToPlay;
-        public CallBreakUserTurnTimer userTurnTimer;
+
         public CallBreakCollectRewardCoinAnimation rewardCoinAnimation;
         public CallBreakToolTipsController toolTipsController;
 

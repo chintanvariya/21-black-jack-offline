@@ -191,23 +191,23 @@ namespace I2.MiniGames
         {
             //--[ validate costs and call AllowRound/DenyRound accordinly ]-----
 
-            if (!mIsPlaying)
-            {
-                DenyRound();
-                return;
-            }
+            //if (!mIsPlaying)
+            //{
+            //    DenyRound();
+            //    return;
+            //}
 
-            if (mNumFreeRounds <= 0)
-            {
-                // if suficient funds
-                //    decrement cost from your inventory and then continue, 
-                // else
-                //    ask for a purchase or offer seeing an incentivized video ad or buying and 
-                //    call this function again when the task is done so the cost gets verified again
+            //if (mNumFreeRounds <= 0)
+            //{
+            //    // if suficient funds
+            //    //    decrement cost from your inventory and then continue, 
+            //    // else
+            //    //    ask for a purchase or offer seeing an incentivized video ad or buying and 
+            //    //    call this function again when the task is done so the cost gets verified again
 
-                TryConsumeCurrency(GetCurrentRoundCost());  // this will call OnConsumeCurrencyResult
-                return;
-            }
+            //    TryConsumeCurrency(GetCurrentRoundCost());  // this will call OnConsumeCurrencyResult
+            //    return;
+            //}
 
             AllowRound();
         }

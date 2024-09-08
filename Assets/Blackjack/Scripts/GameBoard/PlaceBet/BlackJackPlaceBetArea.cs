@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BlackJackOffline
+namespace FGSBlackJack
 {
     public class BlackJackPlaceBetArea : MonoBehaviour
     {

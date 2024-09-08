@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
 
     public class CallBreakNotEnoughCoinsController : MonoBehaviour
@@ -66,8 +66,8 @@ namespace FGSOfflineCallBreak
         {
             Debug.Log("CallBreakNotEnoughCoinsController || OnRewardedAdGranted ");
             CallBreakUIManager.Instance.preLoaderController.ClosePreloader();
-            CallBreakGameManager.instance.selfUserDetails.userChips += rewardCoins;
-            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
+            BlackJackGameManager.instance.selfUserDetails.userChips += rewardCoins;
+            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(BlackJackGameManager.instance.selfUserDetails);
             CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserChips();
             CallBreakUIManager.Instance.dashboardController.OpenScreen();
             gameObject.SetActive(false);

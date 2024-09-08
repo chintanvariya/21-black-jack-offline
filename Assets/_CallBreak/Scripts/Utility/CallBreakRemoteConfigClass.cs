@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakRemoteConfigClass
     {
@@ -23,13 +23,16 @@ namespace FGSOfflineCallBreak
         {
             public FlagDetails flagDetails;
             public AdsDetails adsDetails;
-            public LevelDetails levelDetails;
+            public List<AllLobbyDetail> allLobbyDetails;
         }
         [Serializable]
-        public class LevelDetails
+        public class AllLobbyDetail
         {
-            public List<int> coinsToClearLevel = new List<int>();
-            public List<int> allLobbyAmount = new List<int>();
+            public string countryName;
+            public int minAmount;
+            public int maxAmount;
+            public List<string> countryLevel;
+            public List<Sprite> countryLevelSprite;
         }
         [Serializable]
         public class FlagDetails

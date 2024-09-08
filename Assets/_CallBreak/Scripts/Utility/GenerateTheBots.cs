@@ -4,13 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     [CreateAssetMenu(fileName = "SpriteData", menuName = "ManagerData/BotsSprites", order = 2)]
     [Serializable]
     public class SpriteData : ScriptableObject
     {
         public List<Sprite> allBotDetails;
+    }
+
+    [Serializable]
+    public class BotDetails
+    {
+        public string userName;
+        public string userId;
+        public long userChips;
+        public long userKeys;
+        public int userAvatarIndex;
     }
     public class GenerateTheBots : MonoBehaviour
     {

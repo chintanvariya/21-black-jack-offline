@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakEditProfileController : MonoBehaviour
     {
@@ -37,19 +37,19 @@ namespace FGSOfflineCallBreak
             gameObject.SetActive(true);
         }
 
-        public void UpdateMyProfilePicture() => profilePicture.sprite = CallBreakGameManager.profilePicture;
+        public void UpdateMyProfilePicture() => profilePicture.sprite = BlackJackGameManager.profilePicture;
 
         public void OnValueChangeEnd()
         {
             if (inputFieldUserName.text.Length > 5)
             {
-                CallBreakGameManager.instance.selfUserDetails.userName = inputFieldUserName.text;
-                CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
+                BlackJackGameManager.instance.selfUserDetails.userName = inputFieldUserName.text;
+                CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(BlackJackGameManager.instance.selfUserDetails);
                 CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserName();
             }
             else
             {
-                inputFieldUserName.text = CallBreakGameManager.instance.selfUserDetails.userName;
+                inputFieldUserName.text = BlackJackGameManager.instance.selfUserDetails.userName;
             }
         }
 

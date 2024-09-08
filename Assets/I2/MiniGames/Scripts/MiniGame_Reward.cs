@@ -1,7 +1,7 @@
 using UnityEngine.Events;
 using UnityEngine;
 using System.Collections;
-using FGSOfflineCallBreak;
+using FGSBlackJack;
 
 namespace I2.MiniGames
 {

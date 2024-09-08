@@ -1,9 +1,9 @@
-using FGSOfflineCallBreak;
+using FGSBlackJack;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
 
     public class CallBreakRegisterUserController : MonoBehaviour
@@ -21,19 +21,19 @@ namespace FGSOfflineCallBreak
         public void OpenScreen()
         {
             for (int i = 0; i < allProfileImages.Count; i++)
-                allProfileImages[i].sprite = CallBreakGameManager.instance.allProfileSprite[i];
+                allProfileImages[i].sprite = BlackJackGameManager.instance.allProfileSprite[i];
 
             registerUserName.text = string.Empty;
             registerButton.interactable = false;
 
-            CallBreakGameManager.instance.selfUserDetails.userAvatarIndex = 0;
+            BlackJackGameManager.instance.selfUserDetails.userAvatarIndex = 0;
 
             gameObject.SetActive(true);
         }
 
         public void ProfileSelectBtn(int profileIndex)
         {
-            CallBreakGameManager.instance.selfUserDetails.userAvatarIndex = profileIndex;
+            BlackJackGameManager.instance.selfUserDetails.userAvatarIndex = profileIndex;
 
             selectedImage.SetParent(allProfile[profileIndex], true);
             selectedImage.SetAsFirstSibling();
@@ -58,21 +58,21 @@ namespace FGSOfflineCallBreak
                 CallBreakUIManager.Instance.toolTipsController.OpenToolTips("AdsIsNotReady", "Enter at least 5 characters", "");
             }
 
-            CallBreakGameManager.instance.selfUserDetails.userName = registerUserName.text;
-            CallBreakGameManager.instance.selfUserDetails.userChips = 500;
+            BlackJackGameManager.instance.selfUserDetails.userName = registerUserName.text;
+            BlackJackGameManager.instance.selfUserDetails.userChips = 500;
         }
 
         public void CloseScreen()
         {
             Debug.Log($"{CallBreakConstants.UserDetialsJsonString }");
 
-            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(CallBreakGameManager.instance.selfUserDetails);
+            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(BlackJackGameManager.instance.selfUserDetails);
 
             Debug.Log($"{CallBreakConstants.UserDetialsJsonString }");
 
-            CallBreakGameManager.instance.selfUserDetails = CallBreakUtilities.ReturnUserDetails(CallBreakConstants.UserDetialsJsonString);
+            BlackJackGameManager.instance.selfUserDetails = CallBreakUtilities.ReturnUserDetails(CallBreakConstants.UserDetialsJsonString);
 
-            CallBreakGameManager.profilePicture = CallBreakGameManager.instance.allProfileSprite[CallBreakGameManager.instance.selfUserDetails.userAvatarIndex];
+            BlackJackGameManager.profilePicture = BlackJackGameManager.instance.allProfileSprite[BlackJackGameManager.instance.selfUserDetails.userAvatarIndex];
 
             CallBreakUIManager.Instance.dashboardController.OpenScreen();
 

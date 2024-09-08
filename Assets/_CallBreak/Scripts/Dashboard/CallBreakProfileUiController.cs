@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class CallBreakProfileUiController : MonoBehaviour
     {
@@ -19,20 +19,20 @@ namespace FGSOfflineCallBreak
 
         public void OpenScreen()
         {
-            CallBreakGameManager.instance.selfUserDetails.levelProgress = CallBreakGameManager.instance.selfUserDetails.userKeys;
+            BlackJackGameManager.instance.selfUserDetails.levelProgress = BlackJackGameManager.instance.selfUserDetails.userKeys;
 
-            Debug.Log($"TOTAL levelProgress => {CallBreakGameManager.instance.selfUserDetails.levelProgress}");
+            Debug.Log($"TOTAL levelProgress => {BlackJackGameManager.instance.selfUserDetails.levelProgress}");
 
-            int currentLevel = CallBreakUtilities.ReturnCurrentLevel(CallBreakGameManager.instance.selfUserDetails.levelProgress);
+            int currentLevel = CallBreakUtilities.ReturnCurrentLevel(BlackJackGameManager.instance.selfUserDetails.levelProgress);
 
-            CallBreakGameManager.instance.selfUserDetails.level = currentLevel;
-            userLevelText.text = "Level " + CallBreakGameManager.instance.selfUserDetails.level;
+            BlackJackGameManager.instance.selfUserDetails.level = currentLevel;
+            userLevelText.text = "Level " + BlackJackGameManager.instance.selfUserDetails.level;
 
             Debug.Log($"USER ON LEVEL TO CLEAR => {currentLevel}");
 
-            float startOfLevel = Mathf.Abs(CallBreakConstants.coinsToClearLevel[currentLevel - 1] - CallBreakGameManager.instance.selfUserDetails.levelProgress);
-            if (CallBreakGameManager.instance.selfUserDetails.levelProgress <= CallBreakConstants.coinsToClearLevel[currentLevel - 1])
-                startOfLevel = CallBreakGameManager.instance.selfUserDetails.levelProgress;
+            float startOfLevel = Mathf.Abs(CallBreakConstants.coinsToClearLevel[currentLevel - 1] - BlackJackGameManager.instance.selfUserDetails.levelProgress);
+            if (BlackJackGameManager.instance.selfUserDetails.levelProgress <= CallBreakConstants.coinsToClearLevel[currentLevel - 1])
+                startOfLevel = BlackJackGameManager.instance.selfUserDetails.levelProgress;
 
             Debug.Log($"startOfLevel  {startOfLevel}");
 
@@ -54,15 +54,15 @@ namespace FGSOfflineCallBreak
             gameObject.SetActive(true);
         }
 
-        public void UpdateMyProfilePicture() => profilePicture.sprite = CallBreakGameManager.profilePicture;
-        public void UpdateUserName() => userNameText.text = CallBreakGameManager.instance.selfUserDetails.userName;
-        public void UpdateUserChips() => userChipsText.text = CallBreakUtilities.AbbreviateNumber(CallBreakGameManager.instance.selfUserDetails.userChips);
+        public void UpdateMyProfilePicture() => profilePicture.sprite = BlackJackGameManager.profilePicture;
+        public void UpdateUserName() => userNameText.text = BlackJackGameManager.instance.selfUserDetails.userName;
+        public void UpdateUserChips() => userChipsText.text = CallBreakUtilities.AbbreviateNumber(BlackJackGameManager.instance.selfUserDetails.userChips);
         public void UpdateUserKeys()
         {
-            float clearLevelCoins = CallBreakConstants.coinsToClearLevel[CallBreakGameManager.instance.selfUserDetails.level - 1];
+            float clearLevelCoins = CallBreakConstants.coinsToClearLevel[BlackJackGameManager.instance.selfUserDetails.level - 1];
 
-            if (CallBreakGameManager.instance.selfUserDetails.levelProgress < CallBreakConstants.coinsToClearLevel[CallBreakGameManager.instance.selfUserDetails.level - 1])
-                clearLevelCoins = CallBreakGameManager.instance.selfUserDetails.levelProgress;
+            if (BlackJackGameManager.instance.selfUserDetails.levelProgress < CallBreakConstants.coinsToClearLevel[BlackJackGameManager.instance.selfUserDetails.level - 1])
+                clearLevelCoins = BlackJackGameManager.instance.selfUserDetails.levelProgress;
 
             userKeysText.text = $"{CallBreakUtilities.AbbreviateNumber(clearLevelCoins)}";
         }
@@ -72,7 +72,7 @@ namespace FGSOfflineCallBreak
             switch (buttonName)
             {
                 case "Profile":
-                    CallBreakUIManager.Instance.editProfileController.OpenScreen(CallBreakGameManager.instance.selfUserDetails);
+                    CallBreakUIManager.Instance.editProfileController.OpenScreen(BlackJackGameManager.instance.selfUserDetails);
                     break;
                 case "CoinStore":
                     CallBreakUIManager.Instance.itemPurchase.OpenScreen();

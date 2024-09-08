@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "290049299784",
+    "project_id": "black-jack-589ac",
+    "storage_bucket": "black-jack-589ac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290049299784:android:a3ea680df003f9101a8f7d",
+        "android_client_info": {
+          "package_name": "com.finixgamestudio.blackjack21"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6gbyYliUVEDaRq3aZqU4Penr4yc-TKDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System;
 using System.Collections;
 using GoogleMobileAds.Samples;
-using static FGSOfflineCallBreak.CallBreakRemoteConfigClass;
+using static FGSBlackJack.CallBreakRemoteConfigClass;
 
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
 
     public class FirebaseController : MonoBehaviour
@@ -82,7 +82,7 @@ namespace FGSOfflineCallBreak
                 {
                     Debug.Log($"Remote data loaded and ready for use. Last fetch time {info.FetchTime}.");
 
-                    string configData = remoteConfig.GetValue("Call_Break_Remote_Config").StringValue;
+                    string configData = remoteConfig.GetValue("Black_Jack_21_Remote_Config").StringValue;
                     Debug.Log($"<color><b>CallBreakRemoteConfigData => </b>{configData}</color>");
                     remoteConfigData = JsonUtility.FromJson<CallBreakRemoteConfig>(configData);
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using UnityEngine.UI;
-namespace FGSOfflineCallBreak
+namespace FGSBlackJack
 {
     public class RewardCoinAnimation : MonoBehaviour
     {

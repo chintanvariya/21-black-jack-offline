@@ -1,5 +1,5 @@
 using DG.Tweening;
-using FGSOfflineCallBreak;
+using FGSBlackJack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BlackJackOffline
+namespace FGSBlackJack
 {
     public class BlackJackDealer : MonoBehaviour
     {
@@ -81,7 +81,7 @@ namespace BlackJackOffline
             }
             else
             {
-                if (CallBreakGameManager.instance.selfUserDetails.userChips < CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount)
+                if (BlackJackGameManager.instance.selfUserDetails.userChips < CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount)
                 {
                     //int newLobbyIndex = 100;
                     //newLobbyIndex = gameManager.blackJackLobbies.FindIndex(x => x.minAmount <= BlackJackDataManager.creditPoint);
@@ -683,12 +683,12 @@ namespace BlackJackOffline
             {
                 if (isWin)
                 {
-                    CallBreakGameManager.instance.selfUserDetails.userGameDetails.GameWon++;
+                    BlackJackGameManager.instance.selfUserDetails.userGameDetails.GameWon++;
                 }
                 else
                 {
 
-                    CallBreakGameManager.instance.selfUserDetails.userGameDetails.GameLoss++;
+                    BlackJackGameManager.instance.selfUserDetails.userGameDetails.GameLoss++;
                 }
             }
         }

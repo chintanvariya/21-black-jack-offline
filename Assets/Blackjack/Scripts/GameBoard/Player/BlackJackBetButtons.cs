@@ -1,5 +1,5 @@
 using DG.Tweening;
-using FGSOfflineCallBreak;
+using FGSBlackJack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BlackJackOffline
+namespace FGSBlackJack
 {
     public class BlackJackBetButtons : MonoBehaviour
     {
@@ -50,8 +50,8 @@ namespace BlackJackOffline
         internal BlackJackPlayer player;
 
         [Header("--------------------- Bet Area --------------------- ")]
-        [SerializeField]
-        private List<Text> betsTexts;
+        //[SerializeField]
+        //private List<Text> betsTexts;
         [SerializeField]
         private TMP_Text SliderText, creditPointTxt;
         [SerializeField]
@@ -136,16 +136,17 @@ namespace BlackJackOffline
         {
             partValue.Clear();
 
-            creditPointTxt.text = BlackJackGameManager.instance.SetBalanceFormat(CallBreakGameManager.instance.selfUserDetails.userChips);
+            creditPointTxt.text = BlackJackGameManager.instance.SetBalanceFormat(BlackJackGameManager.instance.selfUserDetails.userChips);
             minValue = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount;
             diffValue = CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.maximumTableAmount - CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount;
             float diffAount = diffValue / 6;
-            betsTexts[0].text = BlackJackGameManager.instance.SetBalanceFormat(minValue);
+            //betsTexts[0].text = BlackJackGameManager.instance.SetBalanceFormat(minValue);
             partValue.Add(BlackJackGameManager.instance.SetRoundFormat(minValue));
             buttonBetTexts[0].text = BlackJackGameManager.instance.SetBalanceFormat(minValue);
-            for (int i = 1; i < betsTexts.Count; i++)
+
+            for (int i = 1; i < buttonBetTexts.Count; i++)
             {
-                betsTexts[i].text = BlackJackGameManager.instance.SetBalanceFormat(minValue + (diffAount * i));
+                //betsTexts[i].text = BlackJackGameManager.instance.SetBalanceFormat(minValue + (diffAount * i));
                 buttonBetTexts[i].text = BlackJackGameManager.instance.SetBalanceFormat(minValue + (diffAount * i));
                 partValue.Add(BlackJackGameManager.instance.SetRoundFormat(minValue + (diffAount * i)));
             }
@@ -153,7 +154,7 @@ namespace BlackJackOffline
             lastValue = 0;
             selectAmount = minValue;
             SliderText.text = BlackJackGameManager.instance.SetBalanceFormat(minValue);
-            float credite = CallBreakGameManager.instance.selfUserDetails.userChips - minValue;
+            float credite = BlackJackGameManager.instance.selfUserDetails.userChips - minValue;
             maxScrollLimit = credite / diffValue;
 
 
@@ -166,7 +167,7 @@ namespace BlackJackOffline
             fillBar.fillAmount = value;
             if (maxScrollLimit > value)
             {
-                if (CallBreakGameManager.instance.selfUserDetails.userChips > selectAmount)
+                if (BlackJackGameManager.instance.selfUserDetails.userChips > selectAmount)
                 {
                     selectAmount = (diffValue * value) + minValue;
                     lastValue = value;
@@ -175,7 +176,7 @@ namespace BlackJackOffline
                 {
                     if (lastValue <= value)
                     {
-                        selectAmount = CallBreakGameManager.instance.selfUserDetails.userChips;
+                        selectAmount = BlackJackGameManager.instance.selfUserDetails.userChips;
                         scrollbar.value = lastValue;
                         fillBar.fillAmount = lastValue;
                     }
@@ -187,7 +188,7 @@ namespace BlackJackOffline
             }
             if (maxScrollLimit <= value)
             {
-                selectAmount = CallBreakGameManager.instance.selfUserDetails.userChips;
+                selectAmount = BlackJackGameManager.instance.selfUserDetails.userChips;
                 scrollbar.value = maxScrollLimit;
                 fillBar.fillAmount = maxScrollLimit;
                 lastValue = maxScrollLimit;
@@ -202,45 +203,53 @@ namespace BlackJackOffline
 
         public List<float> partValue;
         public List<Text> buttonBetTexts;
+        public List<Transform> allBetButtons;
         public GameObject betButtonFooter;
 
         public void OnBetValue(int buttonIndex)
         {
-            switch (buttonIndex)
-            {
-                case 0:
-                    selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[0]);
-                    break;
-                case 1:
-                    selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[1]);
-                    break;
-                case 2:
-                    selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[2]);
-                    break;
-                case 3:
-                    selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[3]);
-                    break;
-                case 4:
-                    selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[4]);
-                    break;
-                case 5:
-                    selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[5]);
-                    break;
-                case 6:
-                    selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[6]);
-                    break;
-            }
+            selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[buttonIndex]);
+            foreach (var item in allBetButtons)
+                item.localScale = Vector3.one;
+            allBetButtons[buttonIndex].transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
+
+            //switch (buttonIndex)
+            //{
+            //    case 0:
+            //        selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[0]);
+            //        break;
+            //    case 1:
+            //        selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[1]);
+            //        break;
+            //    case 2:
+            //        selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[2]);
+            //        break;
+            //    case 3:
+            //        selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[3]);
+            //        break;
+            //    case 4:
+            //        selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[4]);
+            //        break;
+            //    case 5:
+            //        selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[5]);
+            //        break;
+            //    case 6:
+            //        selectAmount = BlackJackGameManager.instance.SetRoundFormat(partValue[6]);
+            //        break;
+            //}
         }
 
         public void ConfirmButtonClicked()
         {
+            foreach (var item in allBetButtons)
+                item.localScale = Vector3.one;
             betButtonFooter.SetActive(false);
             PlaceBetButtonAction(false);
             MoveSide(downPosition);
             float placeAmount = 0;
             if (!player.isCraditAvalible(selectAmount))
             {
-                placeAmount = BlackJackGameManager.instance.SetRoundFormat(CallBreakGameManager.instance.selfUserDetails.userChips);
+                placeAmount = BlackJackGameManager.instance.SetRoundFormat(BlackJackGameManager.instance.selfUserDetails.userChips);
             }
             else
             {

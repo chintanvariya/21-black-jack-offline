@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace BlackJackOffline
+namespace FGSBlackJack
 {
     public class BlackJackPlaceBetCoin : MonoBehaviour
     {

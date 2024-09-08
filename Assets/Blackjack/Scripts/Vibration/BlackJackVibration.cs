@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-namespace BlackJackOffline
+namespace FGSBlackJack
 {
     public static class BlackJackVibration
     {
