@@ -94,7 +94,7 @@ namespace FGSBlackJack
                             CallBreakLobbyUiController cloneOfLobby = Instantiate(lobbyPrefab, parentOfLobby);
                             cloneOfLobby.dashboardController = this;
 
-                            Sprite BG = (i % 2 == 0) ? freeLobbyBg : coinLoobyBG;
+                            Sprite BG = (i % 2 == 0) ? freeLobbyBg : freeLobbyBg;
 
                             string min = CallBreakUtilities.AbbreviateNumber(BlackJackGameManager.instance.allLobbyDetails[i].minAmount);
                             string max = CallBreakUtilities.AbbreviateNumber(BlackJackGameManager.instance.allLobbyDetails[i].maxAmount);
@@ -239,10 +239,15 @@ namespace FGSBlackJack
         {
             currentLobbyPlay = lobbyUiController;
             BlackJackGameManager.instance.totalRoundPlayed = 0;
-            if (CallBreakConstants.callBreakRemoteConfig.adsDetails.isShowInterstitialAdsOnLobby)
+            if (CallBreakConstants.callBreakRemoteConfig.flagDetails.isAds)
             {
-                CallBreakUIManager.Instance.preLoaderController.OpenPreloader();
-                GoogleMobileAds.Sample.InterstitialAdController.ShowInterstitialAd();
+                if (CallBreakConstants.callBreakRemoteConfig.adsDetails.isShowInterstitialAdsOnLobby)
+                {
+                    CallBreakUIManager.Instance.preLoaderController.OpenPreloader();
+                    GoogleMobileAds.Sample.InterstitialAdController.ShowInterstitialAd();
+                }
+                else
+                    OnAdFullScreenContentClosedHandler();
             }
             else
                 OnAdFullScreenContentClosedHandler();

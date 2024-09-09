@@ -81,7 +81,7 @@ namespace FGSBlackJack
 
         public List<Sprite> allBotSprite = new List<Sprite>();
 
-
+        public List<ParticleSystem> allProfileParticleSystem;
         private void Awake()
         {
             if (instance == null)
@@ -298,10 +298,15 @@ namespace FGSBlackJack
                 case "Yes":
                     leavePopUp.SetActive(false);
                     //dealer.StopAllCoroutines();
-                    if (CallBreakConstants.callBreakRemoteConfig.adsDetails.isShowInterstitialAdsOnLobby)
+                    if (CallBreakConstants.callBreakRemoteConfig.flagDetails.isAds)
                     {
-                        CallBreakUIManager.Instance.preLoaderController.OpenPreloader();
-                        GoogleMobileAds.Sample.InterstitialAdController.ShowInterstitialAd();
+                        if (CallBreakConstants.callBreakRemoteConfig.adsDetails.isShowInterstitialAdsOnLobby)
+                        {
+                            CallBreakUIManager.Instance.preLoaderController.OpenPreloader();
+                            GoogleMobileAds.Sample.InterstitialAdController.ShowInterstitialAd();
+                        }
+                        else
+                            OnAdFullScreenContentClosedHandler();
                     }
                     else
                         OnAdFullScreenContentClosedHandler();

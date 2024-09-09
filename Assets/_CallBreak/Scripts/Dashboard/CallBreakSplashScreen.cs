@@ -15,7 +15,7 @@ namespace FGSBlackJack
             //yield return new WaitForSeconds(1f);
 
             slider.DOFillAmount(.98f, 5).SetEase(Ease.InOutCirc);
-           
+
             var loadingAnimation = percentageText.DOText("98%", 5f).SetEase(Ease.InOutCirc).OnComplete(() =>
             {
                 OnCompletedAnimation();
@@ -23,7 +23,7 @@ namespace FGSBlackJack
 
             loadingAnimation.OnUpdate(() =>
             {
-                float progress = loadingAnimation.ElapsedPercentage() * 100f;
+                float progress = loadingAnimation.ElapsedPercentage() * 98f;
                 percentageText.text = $"{progress:F0}%";
             });
         }

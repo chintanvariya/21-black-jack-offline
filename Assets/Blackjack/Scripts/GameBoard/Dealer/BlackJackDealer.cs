@@ -625,6 +625,21 @@ namespace FGSBlackJack
                             //Win
                             area.scoreTxt.text = "WIN";
                             area.AreaWinCurrentRound(true);
+
+                            if (!player.isBot)
+                            {
+                                yield return new WaitForSeconds(0.5f);
+                                foreach (var item in BlackJackGameManager.instance.allProfileParticleSystem)
+                                {
+                                    item.gameObject.SetActive(true);
+                                    item.Play();
+                                }
+                                yield return new WaitForSeconds(0.5f);
+                                foreach (var item in BlackJackGameManager.instance.allProfileParticleSystem)
+                                {
+                                    item.gameObject.SetActive(false);
+                                }
+                            }
                         }
                         else if (dealerCardValue == areaCardsValue)
                         {
@@ -646,6 +661,20 @@ namespace FGSBlackJack
                             SetWinLossCount(true, player);
                             area.scoreTxt.text = "WIN";
                             area.AreaWinCurrentRound(false);
+                            if (!player.isBot)
+                            {
+                                yield return new WaitForSeconds(0.5f);
+                                foreach (var item in BlackJackGameManager.instance.allProfileParticleSystem)
+                                {
+                                    item.gameObject.SetActive(true);
+                                    item.Play();
+                                }
+                                yield return new WaitForSeconds(0.5f);
+                                foreach (var item in BlackJackGameManager.instance.allProfileParticleSystem)
+                                {
+                                    item.gameObject.SetActive(false);
+                                }
+                            }
                         }
                     }
                     yield return new WaitForSeconds(0.1f);
