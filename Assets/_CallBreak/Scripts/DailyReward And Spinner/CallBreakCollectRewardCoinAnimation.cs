@@ -40,7 +40,7 @@ namespace FGSBlackJack
                 case "Spinner":
                     if (CallBreakUIManager.Instance.spinnerController.rewardOfSpinner == 0)
                     {
-                        CallBreakUIManager.Instance.soundManager.PlaySoundEffect(SoundEffects.Lose);
+                        CallBreakSoundManager.PlaySoundEvent("Lose");
                         if (CallBreakUIManager.Instance.spinnerController.isFromAds)
                             CallBreakUIManager.Instance.spinnerController.CloseScreen();
                         return;

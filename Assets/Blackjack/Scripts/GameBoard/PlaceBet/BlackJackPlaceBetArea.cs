@@ -190,8 +190,8 @@ namespace FGSBlackJack
             if (!player.isBot)
             {
                 //Player
-                BlackJackSettingManager.instance.PlaySound("Turn");
-                BlackJackSettingManager.instance.PlayVirationEffect();
+                CallBreakSoundManager.PlaySoundEvent("Turn");
+                CallBreakSoundManager.PlayVibrationEvent();
                 player.StartTimer(BlackJackGameManager.instance.turnTimer, "UserTurn", placeBetAreaImage);
                 BlackJackGameManager.instance.betButtons.UserTurnStart(this);
             }
@@ -439,7 +439,7 @@ namespace FGSBlackJack
 
         IEnumerator WinAnimation(BlackJackPlayer player, bool isBlackJack)
         {
-            BlackJackSettingManager.instance.PlaySound("Win");
+            CallBreakSoundManager.PlaySoundEvent("Win");
             var dealer = BlackJackGameManager.instance.dealer;
             float WinningAmount;
             if (isBlackJack)

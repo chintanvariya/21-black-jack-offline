@@ -80,10 +80,10 @@ namespace FGSBlackJack
         {
             Debug.Log("Load New Round Data ");
             Debug.Log("Load New Round Data isBot ==> " + isBot);
-
             if (!isBot)
             {
                 // Player Place Bet
+                BlackJackGameManager.instance.totalRoundPlayed++;
                 if (BlackJackGameManager.instance.selfUserDetails.userChips <= CallBreakUIManager.Instance.dashboardController.currentLobbyPlay.minimumTableAmount)
                 {
                     BlackJackGameManager.instance.LeaveGame();
@@ -177,7 +177,8 @@ namespace FGSBlackJack
         {
             Debug.Log("AddBetAnimation ==>");
             Debug.Log("AddBetAnimation ==> " + this.name);
-            BlackJackSettingManager.instance.PlaySound("Chips");
+
+            CallBreakSoundManager.PlaySoundEvent("Chips");
             placeYourBetTxt.SetActive(false);
             placeBetArea.gameObject.SetActive(true);
             UpdateCreditPoints(-PlaceBetAmount);

@@ -62,19 +62,19 @@ namespace FGSBlackJack
 
         public void QuitGame()
         {
-            CallBreakSoundManager.PlaySoundEvent(SoundEffects.Click);
+            CallBreakSoundManager.PlaySoundEvent("Click");
             Application.Quit();
         }
 
         public void PrivacyBtn()
         {
-            CallBreakSoundManager.PlaySoundEvent(SoundEffects.Click);
+            CallBreakSoundManager.PlaySoundEvent("Click");
             Application.OpenURL("https://finixgamesstudio.com/privacy-policy/");
         }
 
         public void RateUsBtn()
         {
-            CallBreakSoundManager.PlaySoundEvent(SoundEffects.Click);
+            CallBreakSoundManager.PlaySoundEvent("Click");
             string storeLink = string.Empty;
 #if UNITY_ANDROID
             string playStoreLink = $"https://play.google.com/store/apps/details?id=";

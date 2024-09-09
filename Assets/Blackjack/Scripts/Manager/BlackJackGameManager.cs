@@ -81,7 +81,7 @@ namespace FGSBlackJack
 
         public List<Sprite> allBotSprite = new List<Sprite>();
 
-        
+
         private void Awake()
         {
             if (instance == null)
@@ -229,7 +229,8 @@ namespace FGSBlackJack
 
         public void SettingButtonClick(bool isLobby)
         {
-            BlackJackSettingManager.instance.OpenSettingPanel(isLobby);
+            CallBreakUIManager.Instance.menuController.OpenScreen("GamePlaydMenu");
+            //BlackJackSettingManager.instance.OpenSettingPanel(isLobby);
         }
 
         public void RateUs() => Application.OpenURL("https://play.google.com/store/apps/developer?id=Finix+Games+Studio");
@@ -254,6 +255,11 @@ namespace FGSBlackJack
             dealer.StopAllCoroutines();
             foreach (var screen in gameScreens)
                 screen.SetActive(false);
+            selfUserDetails.userKeys += totalRoundPlayed;
+            Debug.LogError(selfUserDetails.userKeys);
+            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(BlackJackGameManager.instance.selfUserDetails);
+            CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserChips();
+            CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserKeys();
             CallBreakUIManager.Instance.dashboardController.OpenScreen();
         }
 
@@ -263,6 +269,11 @@ namespace FGSBlackJack
             dealer.StopAllCoroutines();
             foreach (var screen in gameScreens)
                 screen.SetActive(false);
+            selfUserDetails.userKeys += totalRoundPlayed;
+            Debug.LogError(selfUserDetails.userKeys);
+            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(BlackJackGameManager.instance.selfUserDetails);
+            CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserChips();
+            CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserKeys();
             CallBreakUIManager.Instance.dashboardController.OpenScreen();
         }
 
@@ -272,6 +283,11 @@ namespace FGSBlackJack
             dealer.StopAllCoroutines();
             foreach (var screen in gameScreens)
                 screen.SetActive(false);
+            selfUserDetails.userKeys += totalRoundPlayed;
+            Debug.LogError(selfUserDetails.userKeys);
+            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(BlackJackGameManager.instance.selfUserDetails);
+            CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserChips();
+            CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserKeys();
             CallBreakUIManager.Instance.dashboardController.OpenScreen();
         }
 
@@ -306,7 +322,7 @@ namespace FGSBlackJack
         }
 
         public BlackJackGameBoardManager gameBoardManager;
-
+        public int totalRoundPlayed;
         public void LeaveGame()
         {
             foreach (var item in gameBoardManager.players)
@@ -316,6 +332,13 @@ namespace FGSBlackJack
             dealer.StopAllCoroutines();
             foreach (var screen in gameScreens)
                 screen.SetActive(false);
+
+            selfUserDetails.userKeys += totalRoundPlayed;
+            Debug.LogError(selfUserDetails.userKeys);
+            CallBreakConstants.UserDetialsJsonString = CallBreakUtilities.ReturnJsonString(BlackJackGameManager.instance.selfUserDetails);
+            CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserChips();
+            CallBreakUIManager.Instance.dashboardController.profileUiController.UpdateUserKeys();
+
             CallBreakUIManager.Instance.dashboardController.OpenScreen();
         }
 

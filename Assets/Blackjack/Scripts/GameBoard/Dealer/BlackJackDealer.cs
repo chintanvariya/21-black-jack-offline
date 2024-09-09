@@ -246,7 +246,7 @@ namespace FGSBlackJack
 
         private void ThrowAndFlipCard(BlackJackCard card, bool isFilp)
         {
-            BlackJackSettingManager.instance.PlaySound("Deal");
+            CallBreakSoundManager.PlaySoundEvent("Deal");
             BlackJackEmptyCard emptyCard = gameManager.pooler.SpawnFromEmptyCards("EmptyCard", fullDeck);
             // TODO : add tween here
             if (isFilp)
@@ -269,7 +269,7 @@ namespace FGSBlackJack
 
         void CardFlipAnimation(BlackJackEmptyCard emptyCard, BlackJackCard card)
         {
-            BlackJackSettingManager.instance.PlaySound("Deal");
+            CallBreakSoundManager.PlaySoundEvent("Deal");
             emptyCard.transform.DOScaleX(0, 0.15f).SetEase(Ease.Linear).OnComplete(() =>
             {
                 emptyCard.emptyImage.sprite = card.cardImage.sprite;

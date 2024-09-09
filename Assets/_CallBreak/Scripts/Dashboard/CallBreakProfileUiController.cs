@@ -64,7 +64,7 @@ namespace FGSBlackJack
             if (BlackJackGameManager.instance.selfUserDetails.levelProgress < CallBreakConstants.coinsToClearLevel[BlackJackGameManager.instance.selfUserDetails.level - 1])
                 clearLevelCoins = BlackJackGameManager.instance.selfUserDetails.levelProgress;
 
-            userKeysText.text = $"{CallBreakUtilities.AbbreviateNumber(clearLevelCoins)}";
+            userKeysText.text = $"{CallBreakUtilities.AbbreviateNumber(BlackJackGameManager.instance.selfUserDetails.userKeys)}";
         }
 
         public void OnButtonClicked(string buttonName)

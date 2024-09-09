@@ -355,7 +355,7 @@ namespace FGSBlackJack
 
         private void HitButtonClicked()
         {
-            BlackJackSettingManager.instance.PlaySound("Hit");
+            CallBreakSoundManager.PlaySoundEvent("Hit");
             CurrentTurnArea.scoreObject.SetActive(false);
             GamePlayButtonAction(false);
             MoveSide(downPosition);

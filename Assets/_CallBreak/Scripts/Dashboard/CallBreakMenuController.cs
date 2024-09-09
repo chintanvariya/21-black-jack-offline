@@ -92,7 +92,7 @@ namespace FGSBlackJack
 
         public void OnButtonClicked(string buttonName)
         {
-            CallBreakSoundManager.PlaySoundEvent(SoundEffects.Click);
+            CallBreakSoundManager.PlaySoundEvent("Click");
             switch (buttonName)
             {
                 case "Setting":

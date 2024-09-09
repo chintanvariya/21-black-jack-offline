@@ -99,7 +99,7 @@ namespace FGSBlackJack
                             string min = CallBreakUtilities.AbbreviateNumber(BlackJackGameManager.instance.allLobbyDetails[i].minAmount);
                             string max = CallBreakUtilities.AbbreviateNumber(BlackJackGameManager.instance.allLobbyDetails[i].maxAmount);
                             string levelName = BlackJackGameManager.instance.allLobbyDetails[i].countryLevel[j];
-                            string keys = CallBreakUtilities.AbbreviateNumber(BlackJackGameManager.instance.allLobbyDetails[i].minAmount / 8);
+                            string keys = "Per Round +1";
                             //Debug.Log($"<color><b>LEVEL NAME => <color=green><b>{levelName} </b></color> || MIN => {min} || MAX => {max} </b></color>");
 
                             cloneOfLobby.minimumTableAmount = BlackJackGameManager.instance.allLobbyDetails[i].minAmount;
@@ -238,6 +238,7 @@ namespace FGSBlackJack
         public void OnButtonPlayNow(CallBreakLobbyUiController lobbyUiController)
         {
             currentLobbyPlay = lobbyUiController;
+            BlackJackGameManager.instance.totalRoundPlayed = 0;
             if (CallBreakConstants.callBreakRemoteConfig.adsDetails.isShowInterstitialAdsOnLobby)
             {
                 CallBreakUIManager.Instance.preLoaderController.OpenPreloader();
