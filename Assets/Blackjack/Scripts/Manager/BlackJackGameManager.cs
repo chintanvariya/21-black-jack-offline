@@ -75,6 +75,7 @@ namespace FGSBlackJack
         public GameObject leavePopUp;
         [SerializeField] internal Text leavePopupText;
 
+        public static bool isInGamePlay;
 
         [Space(5)]
         public List<Sprite> allProfileSprite = new List<Sprite>();
@@ -115,6 +116,7 @@ namespace FGSBlackJack
             ScreenChange("GamePlay");
             dealer.StartNewRound(false);
             UpdateUserInfo();
+            isInGamePlay = true;
         }
 
 
@@ -297,6 +299,7 @@ namespace FGSBlackJack
             {
                 case "Yes":
                     leavePopUp.SetActive(false);
+                    isInGamePlay = false;
                     //dealer.StopAllCoroutines();
                     if (CallBreakConstants.callBreakRemoteConfig.flagDetails.isAds)
                     {
@@ -330,10 +333,10 @@ namespace FGSBlackJack
         public int totalRoundPlayed;
         public void LeaveGame()
         {
+            isInGamePlay = false;
             foreach (var item in gameBoardManager.players)
-            {
                 item.StopTimer();
-            }
+
             dealer.StopAllCoroutines();
             foreach (var screen in gameScreens)
                 screen.SetActive(false);

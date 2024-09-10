@@ -12,7 +12,6 @@ namespace FGSBlackJack
         public void OpenScreen()
         {
             gameObject.SetActive(true);
-            contentTransfrom.anchoredPosition = new Vector2(0, 0);
         }
 
         public void CloseScreen()

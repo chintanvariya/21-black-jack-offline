@@ -72,8 +72,9 @@ namespace FGSBlackJack
             OpenCloseSettingScreen(false);
 
             menuRoot.localScale = Vector3.zero;
-            gameObject.SetActive(true);
+            menuRoot.localScale = Vector3.one;
             menuRoot.DOScale(Vector3.one, 0.25f).SetEase(Ease.Linear);
+            gameObject.SetActive(true);
         }
 
         public void OpenCloseMenuScreen(bool isActive)
@@ -109,27 +110,26 @@ namespace FGSBlackJack
                 case "Tutorial":
                     menuRoot.DOScale(Vector3.zero, 0.25f).SetEase(Ease.Linear).OnComplete(() =>
                     {
-                        gameObject.SetActive(false);
                         CallBreakUIManager.Instance.howToPlay.OpenScreen();
+                        gameObject.SetActive(false);
                     });
                     break;
                 case "Privacy":
                     Application.OpenURL("https://finixgamesstudio.com/privacy-policy/");
                     break;
                 case "Quit":
-                    //if (CallBreakGameManager.isInGamePlay)
-                    //{
-                    //    CallBreakUIManager.Instance.exitController.OpenScreen("Exit", CallBreakConstants.ExitFromGamePlayMessage);
-                    //}
-                    //else
-                    //{
-                    //}
-                    CallBreakUIManager.Instance.exitController.OpenScreen("Exit", CallBreakConstants.ExitFromDashboardPlayMessage);
+                    if (BlackJackGameManager.isInGamePlay)
+                    {
+                        CallBreakUIManager.Instance.exitController.OpenScreen("Exit", CallBreakConstants.ExitFromGamePlayMessage);
+                    }
+                    else
+                    {
+                        CallBreakUIManager.Instance.exitController.OpenScreen("Exit", CallBreakConstants.ExitFromDashboardPlayMessage);
+                    }
                     menuRoot.DOScale(Vector3.zero, 0.25f).SetEase(Ease.Linear).OnComplete(() =>
                     {
                         gameObject.SetActive(false);
                     });
-
                     break;
                 case "SettingClose":
                     OpenCloseMenuScreen(true);
