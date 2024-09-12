@@ -14,6 +14,8 @@ namespace FGSBlackJack
 
         public void OpenScreen()
         {
+            CallBreakUIManager.Instance.toolTipsController.OpenToolTips("AdsIsNotReady", "Coming Soon", "");
+            return;
             for (int i = 0; i < allCoinPack.Count; i++)
             {
                 Debug.Log(allCoinPack[i]);

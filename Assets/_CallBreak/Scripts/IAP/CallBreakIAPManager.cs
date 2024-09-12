@@ -70,8 +70,6 @@ namespace FGSBlackJack
 
             UnityPurchasing.Initialize(this, builder);
             Debug.Log(" ==== IAP INIT ====");
-
-            BuyProductID();
         }
 
         private bool IsInitialized()
@@ -136,7 +134,7 @@ namespace FGSBlackJack
             // Store specific subsystem, for accessing device-specific store features.
             m_StoreExtensionProvider = extensions;
 
-
+            BuyProductID();
         }
 
         public Product ReturnTheProduct(string packName)
