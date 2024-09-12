@@ -14,6 +14,8 @@ namespace FGSBlackJack
 
         public void UpdateTheValue(Product _product)
         {
+            Debug.Log("CallBreakItemPurchaseUi \\ " + _product.metadata.localizedDescription);
+
             product = _product;
             coinText.text = _product.metadata.localizedDescription;
             coinDescriptionText.text = _product.metadata.localizedPriceString;

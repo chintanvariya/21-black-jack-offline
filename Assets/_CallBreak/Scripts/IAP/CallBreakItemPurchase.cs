@@ -16,6 +16,7 @@ namespace FGSBlackJack
         {
             for (int i = 0; i < allCoinPack.Count; i++)
             {
+                Debug.Log(allCoinPack[i]);
                 allCoinPack[i].UpdateTheValue(CallBreakIAPManager.Instance.ReturnTheProduct(allCoinPackString[i]));
             }
             gameObject.SetActive(true);

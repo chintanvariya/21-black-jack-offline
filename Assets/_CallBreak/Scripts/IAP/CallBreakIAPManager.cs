@@ -22,7 +22,6 @@ namespace FGSBlackJack
 
         private string environment = "production";
 
-        [Obsolete]
         async void Start()
         {
             if (Instance == null)
@@ -49,7 +48,6 @@ namespace FGSBlackJack
             // If we haven't set up the Unity Purchasing reference
         }
 
-        [Obsolete]
         public void InitializePurchasing()
         {
             // If we have already connected to Purchasing ...
@@ -72,6 +70,8 @@ namespace FGSBlackJack
 
             UnityPurchasing.Initialize(this, builder);
             Debug.Log(" ==== IAP INIT ====");
+
+            BuyProductID();
         }
 
         private bool IsInitialized()
@@ -95,15 +95,20 @@ namespace FGSBlackJack
 
         void BuyProductID()
         {
+            Debug.Log("BuyProductID FAIL. Not initialized.");
+            Debug.Log("BuyProductID FAIL. Not initialized." + IsInitialized());
             // If Purchasing has been initialized ...
             if (IsInitialized())
             {
                 // system's products collection.
                 for (int i = 0; i < allCoinPackValue.Count; i++)
                 {
+                    Debug.Log($"Coin Pack Id {allCoinPackValue[i]}");
                     Product product = m_StoreController.products.WithID(allCoinPackValue[i]);
                     allProduct.Add(product);
                 }
+
+                Debug.Log($"allProduct COUNT : {allProduct.Count}");
 
                 //if (product1 != null && product1.availableToPurchase)
                 //{
@@ -131,14 +136,17 @@ namespace FGSBlackJack
             // Store specific subsystem, for accessing device-specific store features.
             m_StoreExtensionProvider = extensions;
 
-            BuyProductID();
+
         }
 
         public Product ReturnTheProduct(string packName)
         {
+
+            Debug.Log($"allProduct COUNT : {packName}");
             // Loop through all the products in the list
             foreach (Product product in allProduct)
             {
+
                 Debug.Log($"Coin Pack Id {product.definition.id}");
                 // Check if the product ID matches the given packName
                 if (product.definition.id == packName)
@@ -164,27 +172,27 @@ namespace FGSBlackJack
             // A consumable product has been purchased by this user.
             if (String.Equals(args.purchasedProduct.definition.id, allCoinPackValue[0], StringComparison.Ordinal))
             {
-                coinStore =int.Parse(allCoinValue[0]);
+                coinStore = int.Parse(allCoinValue[0]);
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
             }
             else if (String.Equals(args.purchasedProduct.definition.id, allCoinPackValue[1], StringComparison.Ordinal))
             {
-                coinStore =int.Parse(allCoinValue[1]);
+                coinStore = int.Parse(allCoinValue[1]);
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
             }
             else if (String.Equals(args.purchasedProduct.definition.id, allCoinPackValue[2], StringComparison.Ordinal))
             {
-                coinStore =int.Parse(allCoinValue[2]);
+                coinStore = int.Parse(allCoinValue[2]);
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
             }
             else if (String.Equals(args.purchasedProduct.definition.id, allCoinPackValue[3], StringComparison.Ordinal))
             {
-                coinStore =int.Parse(allCoinValue[3]);
+                coinStore = int.Parse(allCoinValue[3]);
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
             }
             else if (String.Equals(args.purchasedProduct.definition.id, allCoinPackValue[4], StringComparison.Ordinal))
             {
-                coinStore =int.Parse(allCoinValue[4]);
+                coinStore = int.Parse(allCoinValue[4]);
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
             }
             else if (String.Equals(args.purchasedProduct.definition.id, allCoinPackValue[5], StringComparison.Ordinal))
