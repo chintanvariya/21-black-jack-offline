@@ -19,7 +19,7 @@ namespace GoogleMobileAds.Sample
 #if UNITY_ANDROID
         private const string _adUnitId = "ca-app-pub-5918737477932362/5933816206";
 #elif UNITY_IPHONE
-        private const string _adUnitId = "ca-app-pub-3940256099942544/1712485313";
+        private const string _adUnitId = "ca-app-pub-5918737477932362/1217892139";
 #else
         private const string _adUnitId = "unused";
 #endif
